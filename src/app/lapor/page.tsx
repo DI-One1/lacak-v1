@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // <-- Tambahkan baris ini di paling atas
+
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import LaporForm from "./LaporForm"; // Sesuaikan path jika berbeda
