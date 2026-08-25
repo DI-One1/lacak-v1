@@ -28,34 +28,48 @@ export const proxy = clerkMiddleware(async (auth, request) => {
   // ==========================================
   const { userId } = await auth();
 
+  // Belum login → arahkan ke halaman sign-in
   if (!userId) {
-    return auth.protect();
+    const signInUrl = new URL("/sign-in", request.url);
+
+    // Setelah login, kembalikan user ke halaman
+    // yang sebelumnya ingin dia akses.
+    signInUrl.searchParams.set(
+      "redirect_url",
+      request.nextUrl.pathname + request.nextUrl.search
+    );
+
+    return NextResponse.redirect(signInUrl);
   }
 
   // ==========================================
   // AMBIL USER DARI CLERK
   // ==========================================
   const client = await clerkClient();
-
   const user = await client.users.getUser(userId);
 
   if (!user) {
     return NextResponse.redirect(
-      new URL("/access-denied?reason=unauthorized", request.url)
+      new URL(
+        "/access-denied?reason=unauthorized",
+        request.url
+      )
     );
   }
 
   // ==========================================
-  // AMBIL EMAIL
+  // AMBIL EMAIL USER
   // ==========================================
   const emails = user.emailAddresses.map((email) =>
     email.emailAddress.trim().toLowerCase()
   );
 
   // ==========================================
-  // CEK APAKAH EMAIL DIIZINKAN
+  // CEK EMAIL YANG DIIZINKAN
   // ==========================================
-  const isAllowed = emails.includes(ALLOWED_EMAIL);
+  const isAllowed = emails.includes(
+    ALLOWED_EMAIL.toLowerCase()
+  );
 
   console.log("[LACAK AUTH]", {
     userId,
@@ -66,16 +80,19 @@ export const proxy = clerkMiddleware(async (auth, request) => {
   });
 
   // ==========================================
-  // TOLAK USER LAIN
+  // EMAIL TIDAK DIIZINKAN
   // ==========================================
   if (!isAllowed) {
     return NextResponse.redirect(
-      new URL("/access-denied?reason=not-allowed", request.url)
+      new URL(
+        "/access-denied?reason=not-allowed",
+        request.url
+      )
     );
   }
 
   // ==========================================
-  // USER DIIZINKAN
+  // EMAIL DIIZINKAN
   // ==========================================
   return NextResponse.next();
 });
