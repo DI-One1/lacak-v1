@@ -1,4 +1,5 @@
 // app/taruh/page.tsx (Atau sesuaikan dengan letak page_7.tsx kamu)
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import TaruhBarangForm from "./TaruhBarangForm"; // Import Client Component yang kita buat di bawah
 
