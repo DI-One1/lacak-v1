@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==================== MASTER DATA ====================
+
+model CategoryItem {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lostReports LostReport[] @relation("CategoryJenis")
+  foundItems  FoundItem[]  @relation("CategoryJenis")
+
+  @@map("category_items")
+}
+
+model ColorItem {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lostReports LostReport[] @relation("CategoryWarna")
+  foundItems  FoundItem[]  @relation("CategoryWarna")
+
+  @@map("color_items")
+}
+
+model BrandItem {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lostReports LostReport[] @relation("CategoryMerek")
+  foundItems  FoundItem[]  @relation("CategoryMerek")
+
+  @@map("brand_items")
+}
+
+model LocationItem {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lostReports LostReport[] @relation("CategoryLokasi")
+  foundItems  FoundItem[]  @relation("CategoryLokasi")
+
+  @@map("location_items")
+}
+
+// ==================== MASTER DATA WARGA ====================
+
+model Warga {
+  id              String   @id // Tidak lagi pakai uuid(), wajib diisi NIS/NIP kustom
+  nama            String
+  peran           String // Akan difilter di form: "Guru", "Staf", "Siswa"
+  keteranganPeran String?  @map("keterangan_peran") // Pengganti kelas_jabatan
+  nomorTelepon    String?  @map("nomor_telepon")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Integrasi relasi utama untuk logika Matching & Riwayat Individu
+  lostReports       LostReport[]
+  foundItems        FoundItem[]
+  claimTransactions ClaimTransaction[]
+
+  @@map("warga")
+}
+
+// ==================== USERS & AUTH ====================
+
+enum Role {
+  PETUGAS
+  USER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String   @unique @map("clerk_id")
+  email     String   @unique
+  name      String
+  imageUrl  String?  @map("image_url")
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relasi ke tabel operasional dihapus karena diambil alih oleh Warga
+
+  @@map("users")
+}
+
+// ==================== TRANSACTIONS & MODULES ====================
+
+enum LostStatus {
+  DICARI
+  SELESAI
+}
+
+model LostReport {
+  id              String @id @default(uuid())
+  reporterName    String @map("reporter_name")
+  reporterIdCard  String @map("reporter_id_card") // NIS / NIP
+  reporterContact String @map("reporter_contact")
+
+  // Foreign key ke tabel Warga
+  wargaId String? @map("warga_id")
+  warga   Warga?  @relation(fields: [wargaId], references: [id])
+
+  jenisId String       @map("jenis_id")
+  jenis   CategoryItem @relation("CategoryJenis", fields: [jenisId], references: [id])
+
+  warnaId String    @map("warna_id")
+  warna   ColorItem @relation("CategoryWarna", fields: [warnaId], references: [id])
+
+  merekId String    @map("merek_id")
+  merek   BrandItem @relation("CategoryMerek", fields: [merekId], references: [id])
+
+  lokasiId String       @map("lokasi_id")
+  lokasi   LocationItem @relation("CategoryLokasi", fields: [lokasiId], references: [id])
+
+  status         LostStatus @default(DICARI) // Status pelacakan
+  additionalDesc String?    @map("additional_desc")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  claimTransactions ClaimTransaction[]
+
+  @@map("lost_reports")
+}
+
+enum ItemStatus {
+  FOUND
+  CLAIMED
+  EXPIRED
+}
+
+model FoundItem {
+  id            String @id @default(uuid())
+  businessCode  String @unique @map("business_code")
+  finderName    String @map("finder_name")
+  finderIdCard  String @default("-") @map("finder_id_card")
+  finderContact String @map("finder_contact")
+
+  // Foreign key ke tabel Warga
+  wargaId String? @map("warga_id")
+  warga   Warga?  @relation(fields: [wargaId], references: [id])
+
+  jenisId String       @map("jenis_id")
+  jenis   CategoryItem @relation("CategoryJenis", fields: [jenisId], references: [id])
+
+  warnaId String    @map("warna_id")
+  warna   ColorItem @relation("CategoryWarna", fields: [warnaId], references: [id])
+
+  merekId String    @map("merek_id")
+  merek   BrandItem @relation("CategoryMerek", fields: [merekId], references: [id])
+
+  lokasiId String       @map("lokasi_id")
+  lokasi   LocationItem @relation("CategoryLokasi", fields: [lokasiId], references: [id])
+
+  additionalDesc  String?    @map("additional_desc")
+  status          ItemStatus @default(FOUND)
+  activeDaysCount Int        @default(0) @map("active_days_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  claim ClaimTransaction?
+
+  @@map("found_items")
+}
+
+model ClaimTransaction {
+  id          String    @id @default(uuid())
+  foundItemId String    @unique @map("found_item_id")
+  foundItem   FoundItem @relation(fields: [foundItemId], references: [id])
+
+  claimantName    String @map("claimant_name")
+  claimantIdCard  String @map("claimant_id_card")
+  claimantContact String @map("claimant_contact")
+
+  // Foreign key ke tabel Warga (pengganti relasi handledBy User)
+  wargaId String? @map("warga_id")
+  warga   Warga?  @relation(fields: [wargaId], references: [id])
+
+  lostReportId String?           @map("lost_report_id")
+  lostReport   LostReport?       @relation(fields: [lostReportId], references: [id])
+
+  claimedAt DateTime @default(now()) @map("claimed_at")
+
+  @@map("claim_transactions")
+}
+
+// ==================== SYSTEM UTILITIES ====================
+
+model AcademicCalendar {
+  id          String   @id @default(uuid())
+  date        DateTime @unique
+  isHoliday   Boolean  @default(false) @map("is_holiday")
+  description String?
+
+  @@map("academic_calendar")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actor     String
+  action    String
+  entity    String
+  oldValue  String?  @map("old_value")
+  newValue  String?  @map("new_value")
+  timestamp DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  wargaId   String?  @map("warga_id")
+  title     String
+  message   String
+  type      String // "match" | "info" | "success"
+  isRead    Boolean  @default(false) @map("is_read")
+  link      String? // URL tujuan saat diklik
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
+}

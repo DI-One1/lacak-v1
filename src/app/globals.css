@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green-dark: #0d3b2e;
+  --color-green-mid: #1a5c44;
+  --color-green-accent: #3dbd84;
+  --color-cream: #faf9f6;
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-green-dark);
+  font-family: var(--font-poppins);
+}

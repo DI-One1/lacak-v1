@@ -1,0 +1,129 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public._prisma_migrations (
+  id character varying NOT NULL,
+  checksum character varying NOT NULL,
+  finished_at timestamp with time zone,
+  migration_name character varying NOT NULL,
+  logs text,
+  rolled_back_at timestamp with time zone,
+  started_at timestamp with time zone NOT NULL DEFAULT now(),
+  applied_steps_count integer NOT NULL DEFAULT 0,
+  CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.category_items (
+  id text NOT NULL,
+  name text NOT NULL,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT category_items_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.color_items (
+  id text NOT NULL,
+  name text NOT NULL,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT color_items_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.brand_items (
+  id text NOT NULL,
+  name text NOT NULL,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT brand_items_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.location_items (
+  id text NOT NULL,
+  name text NOT NULL,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT location_items_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.lost_reports (
+  id text NOT NULL,
+  reporter_name text NOT NULL,
+  reporter_id_card text NOT NULL,
+  reporter_contact text NOT NULL,
+  jenis_id text NOT NULL,
+  warna_id text NOT NULL,
+  merek_id text NOT NULL,
+  lokasi_id text NOT NULL,
+  additional_desc text,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp without time zone NOT NULL,
+  user_id text,
+  CONSTRAINT lost_reports_pkey PRIMARY KEY (id),
+  CONSTRAINT lost_reports_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT lost_reports_jenis_id_fkey FOREIGN KEY (jenis_id) REFERENCES public.category_items(id),
+  CONSTRAINT lost_reports_warna_id_fkey FOREIGN KEY (warna_id) REFERENCES public.color_items(id),
+  CONSTRAINT lost_reports_merek_id_fkey FOREIGN KEY (merek_id) REFERENCES public.brand_items(id),
+  CONSTRAINT lost_reports_lokasi_id_fkey FOREIGN KEY (lokasi_id) REFERENCES public.location_items(id)
+);
+CREATE TABLE public.found_items (
+  id text NOT NULL,
+  business_code text NOT NULL,
+  finder_name text NOT NULL,
+  jenis_id text NOT NULL,
+  warna_id text NOT NULL,
+  merek_id text NOT NULL,
+  lokasi_id text NOT NULL,
+  additional_desc text,
+  status USER-DEFINED NOT NULL DEFAULT 'FOUND'::"ItemStatus",
+  active_days_count integer NOT NULL DEFAULT 0,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp without time zone NOT NULL,
+  finder_contact text NOT NULL,
+  user_id text,
+  CONSTRAINT found_items_pkey PRIMARY KEY (id),
+  CONSTRAINT found_items_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT found_items_jenis_id_fkey FOREIGN KEY (jenis_id) REFERENCES public.category_items(id),
+  CONSTRAINT found_items_warna_id_fkey FOREIGN KEY (warna_id) REFERENCES public.color_items(id),
+  CONSTRAINT found_items_merek_id_fkey FOREIGN KEY (merek_id) REFERENCES public.brand_items(id),
+  CONSTRAINT found_items_lokasi_id_fkey FOREIGN KEY (lokasi_id) REFERENCES public.location_items(id)
+);
+CREATE TABLE public.claim_transactions (
+  id text NOT NULL,
+  found_item_id text NOT NULL,
+  claimant_name text NOT NULL,
+  claimant_id_card text NOT NULL,
+  claimant_contact text NOT NULL,
+  claimed_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  handled_by_id text,
+  CONSTRAINT claim_transactions_pkey PRIMARY KEY (id),
+  CONSTRAINT claim_transactions_found_item_id_fkey FOREIGN KEY (found_item_id) REFERENCES public.found_items(id),
+  CONSTRAINT claim_transactions_handled_by_id_fkey FOREIGN KEY (handled_by_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.academic_calendar (
+  id text NOT NULL,
+  date timestamp without time zone NOT NULL,
+  is_holiday boolean NOT NULL DEFAULT false,
+  description text,
+  CONSTRAINT academic_calendar_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.audit_logs (
+  id text NOT NULL,
+  actor text NOT NULL,
+  action text NOT NULL,
+  entity text NOT NULL,
+  old_value text,
+  new_value text,
+  timestamp timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT audit_logs_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.users (
+  id text NOT NULL,
+  clerk_id text NOT NULL,
+  email text NOT NULL,
+  name text NOT NULL,
+  image_url text,
+  role USER-DEFINED NOT NULL DEFAULT 'USER'::"Role",
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp without time zone NOT NULL,
+  CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.warga (
+  id text NOT NULL,
+  nama text NOT NULL,
+  peran text NOT NULL,
+  kelas_jabatan text,
+  nomor_telepon text,
+  created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT warga_pkey PRIMARY KEY (id)
+);
