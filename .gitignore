@@ -45,3 +45,6 @@ next-env.d.ts
 
 # archived (orphan/duplicate files kept for reference)
 /src/_archive/
+
+.vercel
+.env*

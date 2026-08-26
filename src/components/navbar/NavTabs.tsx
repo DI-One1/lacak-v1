@@ -31,9 +31,9 @@ export default function NavTabs() {
           
           {/* 1. Beranda */}
           <Link
-            href="/"
+            href="/dashboard"
             className={`block whitespace-nowrap text-[0.92rem] font-medium px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
-              isActive("/")
+              isActive("/dashboard")
                 ? "text-white font-semibold border-[#3dbd84]"
                 : "text-white/65 hover:text-white border-transparent"
             }`}

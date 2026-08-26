@@ -12,6 +12,8 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/access-denied(.*)",
+  "/tentang-kami(.*)",
+  "/api/public(.*)",
   "/api/v1/public(.*)",
 ]);
 
