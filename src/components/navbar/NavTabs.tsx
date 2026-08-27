@@ -53,17 +53,6 @@ export default function NavTabs() {
             Data Warga
           </Link>
 
-          {/* 3. Tentang Kami */}
-          <Link
-            href="/tentang-kami"
-            className={`block whitespace-nowrap text-[0.92rem] font-medium px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
-              isActive("/tentang-kami")
-                ? "text-white font-semibold border-[#3dbd84]"
-                : "text-white/65 hover:text-white border-transparent"
-            }`}
-          >
-            Tentang Kami
-          </Link>
 
           {/* 3. Dropdown Riwayat */}
           <div className="relative flex-shrink-0" ref={dropdownRef}>
