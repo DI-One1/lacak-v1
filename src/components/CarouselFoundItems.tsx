@@ -28,7 +28,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "Pakaian/Tas":
     "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=1060&fit=crop&crop=center&q=80",
   Kunci:
-    "https://images.unsplash.com/photo-1584985429926-08867327d3a6?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVuZ2FuJTIwa3VuY2l8ZW58MHx8MHx8fDA%3D",
+    "https://images.unsplash.com/photo-1609770231080-e321deccc34c?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8a3VuY2klMjBzdWtzZXN8ZW58MHx8MHx8fDA%3D",
   Aksesoris:
     "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=1060&fit=crop&crop=center&q=80",
   Lainnya:
