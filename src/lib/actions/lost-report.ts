@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkAndExpireItems } from "./item-lifecycle";
+import { processNewLostReportMatch } from "./matching";
+import { resolveMatchNotificationsByFoundItemId } from "./notification";
 
 /**
  * Membuat LostReport — mendukung DUA jalur:
@@ -91,6 +93,13 @@ export async function createLostReport(formData: FormData) {
       });
     });
 
+    // Bersihkan notifikasi match terkait barang yang baru di-claim
+    try {
+      await resolveMatchNotificationsByFoundItemId(foundItem.id);
+    } catch (error) {
+      console.error("Gagal membersihkan notifikasi klaim:", error);
+    }
+
     revalidatePath("/");
     revalidatePath("/riwayat/laporan");
     revalidatePath("/riwayat/temuan");
@@ -100,7 +109,7 @@ export async function createLostReport(formData: FormData) {
   }
 
   // JALUR 1: Laporan normal — hanya buat LostReport dengan status DICARI
-  await prisma.lostReport.create({
+  const newReport = await prisma.lostReport.create({
     data: {
       reporterName,
       reporterIdCard,
@@ -114,6 +123,14 @@ export async function createLostReport(formData: FormData) {
       status: "DICARI",
     },
   });
+
+  // Trigger matching otomatis
+  try {
+    await processNewLostReportMatch(newReport.id);
+  } catch (error) {
+    // Matching gagal tidak boleh menggagalkan create
+    console.error("[createLostReport] Matching notification error (non-fatal):", error);
+  }
 
   revalidatePath("/");
   revalidatePath("/riwayat/laporan");

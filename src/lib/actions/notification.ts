@@ -7,10 +7,13 @@ import { revalidatePath } from "next/cache";
 export type SerializedNotification = {
   id: string;
   wargaId: string | null;
+  lostReportId: string | null;
+  foundItemId: string | null;
   title: string;
   message: string;
   type: string;
   isRead: boolean;
+  isResolved: boolean;
   link: string | null;
   createdAt: string; // <-- string ISO
 };
@@ -22,6 +25,7 @@ export type SerializedNotification = {
 export async function getNotifications(limit = 20): Promise<SerializedNotification[]> {
   try {
     const notifications = await prisma.notification.findMany({
+      where: { isResolved: false },
       orderBy: { createdAt: "desc" },
       take: limit,
     });
@@ -58,7 +62,7 @@ export async function markAllAsRead() {
 export async function getUnreadCount() {
   try {
     const count = await prisma.notification.count({
-      where: { isRead: false },
+      where: { isRead: false, isResolved: false },
     });
     return count;
   } catch (error) {
@@ -83,3 +87,34 @@ export async function markOneAsRead(notificationId: string) {
     return { success: false };
   }
 }
+
+/**
+ * Menyelesaikan/me-resolve semua notifikasi kecocokan (type: "match") untuk barang temuan tertentu.
+ * Digunakan untuk menonaktifkan notifikasi setelah barang di-claim.
+ */
+export async function resolveMatchNotificationsByFoundItemId(foundItemId: string) {
+  if (!foundItemId) return { success: false };
+
+  try {
+    const result = await prisma.notification.updateMany({
+      where: {
+        type: "match",
+        foundItemId,
+        isResolved: false,
+      },
+      data: {
+        isResolved: true,
+      },
+    });
+
+    if (result.count > 0) {
+      console.log(`[resolveMatchNotificationsByFoundItemId] Resolved ${result.count} notification(s) for item ID ${foundItemId}.`);
+    }
+
+    revalidatePath("/");
+    return { success: true, count: result.count };
+  } catch (error) {
+    console.error("Gagal me-resolve notifikasi kecocokan:", error);
+    return { success: false, error };
+  }
+}

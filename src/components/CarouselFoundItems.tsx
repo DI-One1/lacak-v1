@@ -24,15 +24,15 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "Dompet & Uang":
     "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&h=1060&fit=crop&crop=center&q=80",
   "Dokumen/Kertas":
-    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=1060&fit=crop&crop=center&q=80",
+    "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&h=1060&fit=crop&crop=center&q=80",
   "Pakaian/Tas":
     "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=1060&fit=crop&crop=center&q=80",
   Kunci:
-    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=1060&fit=crop&crop=center&q=80",
+    "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=800&h=1060&fit=crop&crop=center&q=80",
   Aksesoris:
     "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=1060&fit=crop&crop=center&q=80",
   Lainnya:
-    "https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&h=1060&fit=crop&crop=center&q=80",
+    "https://images.unsplash.com/photo-1540759786422-c60d5ede1007?w=800&h=1060&fit=crop&crop=center&q=80",
 };
 
 function getImage(category: string): string {
@@ -75,6 +75,8 @@ export default function CarouselFoundItems({ items }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
   const startT = useRef(0);
+  const dragDeltaRef = useRef(0);
+  const wasDraggingRef = useRef(false);
 
   /* ── responsive measurement ── */
   useEffect(() => {
@@ -118,13 +120,20 @@ export default function CarouselFoundItems({ items }: Props) {
     setDragging(true);
     startX.current = e.clientX;
     startT.current = Date.now();
+    dragDeltaRef.current = 0;
+    wasDraggingRef.current = false;
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
   }, []);
 
   const onMove = useCallback(
     (e: React.PointerEvent) => {
       if (!dragging) return;
-      setDragDelta(e.clientX - startX.current);
+      const delta = e.clientX - startX.current;
+      dragDeltaRef.current = delta;
+      setDragDelta(delta);
+      if (Math.abs(delta) > 10) {
+        wasDraggingRef.current = true;
+      }
     },
     [dragging],
   );
@@ -132,13 +141,20 @@ export default function CarouselFoundItems({ items }: Props) {
   const onUp = useCallback(() => {
     if (!dragging) return;
     setDragging(false);
-    const v = dragDelta / Math.max(1, Date.now() - startT.current);
+    const delta = dragDeltaRef.current;
+    const duration = Date.now() - startT.current;
+    const v = delta / Math.max(1, duration);
     const threshold = iWidth * 0.2;
-    if (Math.abs(dragDelta) > threshold || Math.abs(v) > 0.3) {
-      dragDelta < 0 ? next() : prev();
+    if (Math.abs(delta) > threshold || Math.abs(v) > 0.3) {
+      if (delta < 0) {
+        next();
+      } else {
+        prev();
+      }
     }
+    dragDeltaRef.current = 0;
     setDragDelta(0);
-  }, [dragging, dragDelta, iWidth, next, prev]);
+  }, [dragging, iWidth, next, prev]);
 
   /* ── detail panel ── */
   function openDetail(item: PublicFoundItem) {
@@ -243,14 +259,21 @@ export default function CarouselFoundItems({ items }: Props) {
                     transition: dragging
                       ? "none"
                       : `all 520ms ${EASE}`,
-                    pointerEvents: active ? "auto" : "none",
+                    pointerEvents: "auto",
                   }}
                 >
                   <button
                     type="button"
-                    onClick={() => active && openDetail(item)}
+                    onClick={(e) => {
+                      if (wasDraggingRef.current) {
+                        e.preventDefault();
+                        return;
+                      }
+                      if (active) openDetail(item);
+                    }}
                     className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3dbd84] group"
                     tabIndex={active ? 0 : -1}
+                    style={{ pointerEvents: active ? "auto" : "none" }}
                     aria-label={`Lihat detail ${itemTitle(item)}`}
                   >
                     {/* image */}

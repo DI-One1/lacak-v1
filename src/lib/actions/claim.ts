@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkAndExpireItems } from "./item-lifecycle";
+import { resolveMatchNotificationsByFoundItemId } from "./notification";
 
 // 1. Fungsi untuk mengecek keberadaan & status barang ke Database
 export async function verifyItemExists(businessCode: string) {
@@ -83,6 +84,13 @@ export async function processClaimItem(formData: FormData) {
       },
     }),
   ]);
+
+  // Bersihkan notifikasi match terkait barang yang baru di-claim
+  try {
+    await resolveMatchNotificationsByFoundItemId(foundItem.id);
+  } catch (error) {
+    console.error("Gagal membersihkan notifikasi klaim:", error);
+  }
 
   revalidatePath("/");
   revalidatePath("/riwayat/pengambilan");

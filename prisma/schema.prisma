@@ -222,14 +222,17 @@ model AuditLog {
 }
 
 model Notification {
-  id        String   @id @default(uuid())
-  wargaId   String?  @map("warga_id")
-  title     String
-  message   String
-  type      String // "match" | "info" | "success"
-  isRead    Boolean  @default(false) @map("is_read")
-  link      String? // URL tujuan saat diklik
-  createdAt DateTime @default(now()) @map("created_at")
+  id           String   @id @default(uuid())
+  wargaId      String?  @map("warga_id")
+  lostReportId String?  @map("lost_report_id")
+  foundItemId  String?  @map("found_item_id")
+  title        String
+  message      String
+  type         String // "match" | "info" | "success"
+  isRead       Boolean  @default(false) @map("is_read")
+  isResolved   Boolean  @default(false) @map("is_resolved")
+  link         String? // URL tujuan saat diklik
+  createdAt    DateTime @default(now()) @map("created_at")
 
   @@map("notifications")
 }
