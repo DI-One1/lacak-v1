@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Tentang Kami — LACAK",
   description:
-    "Mengenal LACAK — Sistem pelacakan barang temuan dan kehilangan berbasis digital di lingkungan SMK TI BAZMA.",
+    "Mengenal LACAK — Sistem pelacakan barang temuan dan kehilangan berbasis digital di lingkungan Institusi.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -162,7 +162,7 @@ function Hero() {
 
       <div className="relative mx-auto max-w-7xl px-6 py-28 md:px-10 md:py-36 lg:px-12 lg:py-44">
         <div className="max-w-4xl">
-          <Eyebrow>SMK TI BAZMA</Eyebrow>
+          <Eyebrow>lacak-v1</Eyebrow>
 
           <h1 className="font-serif text-6xl leading-[0.95] tracking-[-0.035em] text-green-dark sm:text-7xl md:text-8xl lg:text-[8rem]">
             Tentang
@@ -202,7 +202,7 @@ function Introduction() {
             <p className="mt-8 max-w-xl text-lg leading-8 text-green-dark/75 md:text-xl md:leading-9">
               LACAK merupakan platform digital yang dirancang untuk membantu
               proses pelaporan barang hilang dan barang temuan di lingkungan
-              SMK TI BAZMA.
+              Institusi.
             </p>
 
             <p className="mt-6 max-w-xl text-base leading-8 text-green-dark/55">
@@ -216,7 +216,7 @@ function Introduction() {
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-green-dark/5 lg:aspect-auto">
             <img
               src={INTRO_IMAGE}
-              alt="Aktivitas warga sekolah di lingkungan SMK TI BAZMA"
+              alt="Aktivitas warga sekolah di lingkungan Institusi"
               className="h-full w-full object-cover"
               loading="lazy"
             />
