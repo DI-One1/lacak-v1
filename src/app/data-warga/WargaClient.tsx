@@ -181,8 +181,8 @@ export default function WargaClient({ initialData }: { initialData: Warga[] }) {
     <div className="container mx-auto px-4 py-8 relative min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-[#0d3b2e]">Data Warga</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-visible mb-24">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto mb-24">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wider">
               <th className="px-6 py-4">NIS / ID</th>

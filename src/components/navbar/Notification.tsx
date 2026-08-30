@@ -127,17 +127,15 @@ export default function Notification() {
                 <div
                   key={notif.id}
                   onClick={() => handleItemClick(notif)}
-                  className={`p-3.5 hover:bg-gray-50 transition-colors cursor-pointer ${
-                    !notif.isRead ? "bg-emerald-50/50" : ""
-                  }`}
+                  className={`p-3.5 hover:bg-gray-50 transition-colors cursor-pointer ${!notif.isRead ? "bg-emerald-50/50" : ""
+                    }`}
                 >
                   {notif.link ? (
                     <Link href={notif.link} className="block">
                       <div className="flex justify-between items-start gap-2">
                         <p
-                          className={`text-xs font-bold ${
-                            !notif.isRead ? "text-[#0d3b2e]" : "text-gray-700"
-                          }`}
+                          className={`text-xs font-bold ${!notif.isRead ? "text-[#0d3b2e]" : "text-gray-700"
+                            }`}
                         >
                           {notif.title}
                         </p>
@@ -153,9 +151,8 @@ export default function Notification() {
                     <div>
                       <div className="flex justify-between items-start gap-2">
                         <p
-                          className={`text-xs font-bold ${
-                            !notif.isRead ? "text-[#0d3b2e]" : "text-gray-700"
-                          }`}
+                          className={`text-xs font-bold ${!notif.isRead ? "text-[#0d3b2e]" : "text-gray-700"
+                            }`}
                         >
                           {notif.title}
                         </p>

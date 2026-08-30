@@ -27,12 +27,12 @@ export default function NavTabs() {
     <div className="container mx-auto px-4 md:px-5">
       <div className="grid grid-cols-1 md:grid-cols-[120px_1fr_auto] gap-4 md:gap-10 items-center w-full">
         
-        <div className="col-span-1 md:col-start-2 flex items-center gap-2 overflow-x-auto md:overflow-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-1">
+        <div className="col-span-1 md:col-start-2 flex flex-wrap items-center gap-1 md:gap-2 overflow-visible py-1">
           
           {/* 1. Beranda */}
           <Link
             href="/dashboard"
-            className={`block whitespace-nowrap text-[0.92rem] font-medium px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
+            className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
               isActive("/dashboard")
                 ? "text-white font-semibold border-[#3dbd84]"
                 : "text-white/65 hover:text-white border-transparent"
@@ -44,7 +44,7 @@ export default function NavTabs() {
           {/* 2. Data Warga */}
           <Link
             href="/data-warga"
-            className={`block whitespace-nowrap text-[0.92rem] font-medium px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
+            className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
               isActive("/data-warga")
                 ? "text-white font-semibold border-[#3dbd84]"
                 : "text-white/65 hover:text-white border-transparent"
@@ -58,7 +58,7 @@ export default function NavTabs() {
           <div className="relative flex-shrink-0" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={`block whitespace-nowrap text-[0.92rem] font-medium px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all bg-transparent cursor-pointer flex items-center gap-1 ${
+              className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all bg-transparent cursor-pointer flex items-center gap-1 ${
                 isRiwayatActive
                   ? "text-white font-semibold border-[#3dbd84]"
                   : "text-white/65 hover:text-white border-transparent"
