@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import WargaClient from "./WargaClient";
+import WargaClient from "@/features/warga/components/WargaClient";
 
 // BARIS INI YANG BIKIN DATA GAK BASI (CACHE MATI)
 export const dynamic = "force-dynamic";

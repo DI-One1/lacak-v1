@@ -1,0 +1,30 @@
+# Checklist Eksekusi Restrukturisasi `lacak-v1`
+
+- [x] 1. Komponen Global & Layout
+  - [x] Ganti import `Navbar` di `src/app/layout.tsx` ke `@/components/shared/Navbar`.
+  - [x] Jalankan `syncUserToDatabase()` di `src/app/layout.tsx`.
+  - [x] Hapus folder duplicate `src/components/navbar/`.
+- [x] 2. Domain Warga
+  - [x] Update `src/app/data-warga/page.tsx` ke `@/features/warga/components/WargaClient`.
+  - [x] Hapus berkas lama `WargaClient.tsx` dan `WargaRow.tsx` di `src/app/data-warga/`.
+  - [x] Hapus folder `src/app/data-warga/components/`.
+  - [x] Hapus `src/components/warga/WargaVerificationCard.tsx`.
+- [x] 3. Domain Barang / Item
+  - [x] Pindahkan `StepDetailBarang.tsx` ke `src/features/item/components/StepDetailBarang.tsx`.
+  - [x] Pindahkan `SearchableFoundItem.tsx` ke `src/features/item/components/SearchableFoundItem.tsx`.
+  - [x] Refactor imports di dalam component tersebut (konsumsi `@/features/item/actions/...`).
+  - [x] Refactor `SearchableFoundItem.tsx` untuk menggunakan `<Modal>` global.
+  - [x] Update `src/app/lapor/LaporForm.tsx` imports ke feature components/actions.
+  - [x] Update `src/app/taruh/TaruhBarangForm.tsx` imports ke feature components/actions.
+  - [x] Hapus folder `src/components/lapor/` lama dan `src/components/SearchableFoundItem.tsx` lama.
+- [x] 4. Domain Klaim / Claim
+  - [x] Buat folder `src/features/claim/components/` dan pindahkan file-file `StepPilihLaporan.tsx`, `StepIdentifikasiBarang.tsx`, `StepKonfirmasiKlaim.tsx`, `AmbilBarangClient.tsx`.
+  - [x] Pindahkan actions dari `src/lib/actions/claim.ts` ke `src/features/claim/actions.ts` dan hilangkan query-write checkAndExpireItems pada pembacaan.
+  - [x] Buat file `src/features/claim/types.ts`.
+  - [x] Update `src/app/ambil/page.tsx` imports ke `@/features/claim/components/AmbilBarangClient` dan actions baru.
+  - [x] Hapus folder `src/components/ambil/` lama dan `src/app/ambil/AmbilBarangClient.tsx` lama.
+- [ ] 5. Pembersihan Lib Actions Lama
+  - [ ] Hapus file actions lama di `src/lib/actions/`.
+- [ ] 6. Verifikasi & Build Check
+  - [ ] Jalankan `npx tsc --noEmit`.
+  - [ ] Jalankan `npm run build`.

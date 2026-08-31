@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createLostReport } from "@/lib/actions/item";
-import { getSemuaWarga } from "@/lib/actions/warga";
-import { Warga } from "@/types/warga";
-import { FoundItemMatch } from "@/components/SearchableFoundItem";
-import WargaVerificationCard from "@/components/warga/WargaVerificationCard";
-import StepDetailBarang from "@/components/lapor/StepDetailBarang";
+import { createLostReport } from "@/features/item/actions/lost-report";
+import { getSemuaWarga } from "@/features/warga/actions";
+import { Warga } from "@/features/warga/types";
+import { FoundItemMatch } from "@/features/item/types";
+import WargaVerificationCard from "@/features/warga/components/WargaVerificationCard";
+import StepDetailBarang from "@/features/item/components/StepDetailBarang";
 
 interface MasterItem {
   id: string;

@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createFoundItem, getBusinessCodePreview } from "@/lib/actions/item";
-import { getSemuaWarga } from "@/lib/actions/warga";
-import { Warga } from "@/types/warga";
-import WargaVerificationCard from "@/components/warga/WargaVerificationCard";
+import { createFoundItem, getBusinessCodePreview } from "@/features/item/actions/found-item";
+import { getSemuaWarga } from "@/features/warga/actions";
+import { Warga } from "@/features/warga/types";
+import WargaVerificationCard from "@/features/warga/components/WargaVerificationCard";
 
 interface MasterItem {
   id: string;

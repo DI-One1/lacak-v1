@@ -1,9 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { getSemuaWarga } from "@/lib/actions/warga";
-import { Warga } from "@/types/warga";
-import AmbilBarangClient from "./AmbilBarangClient";
+import { getSemuaWarga } from "@/features/warga/actions";
+import { Warga } from "@/features/warga/types";
+import AmbilBarangClient from "@/features/claim/components/AmbilBarangClient";
 
 export default async function AmbilBarangPage() {
   let initialDataWarga: Warga[] = [];
