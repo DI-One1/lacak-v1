@@ -421,7 +421,7 @@ function ClosingCTA() {
             <Eyebrow>LACAK</Eyebrow>
 
             <h2 className="max-w-2xl font-serif text-4xl leading-[1.08] tracking-[-0.025em] text-green-dark md:text-5xl">
-              Temukan kembali barang yang penting bagi Anda.
+              Temukan kembali barang yang berharga bagi Anda.
             </h2>
 
             <p className="mt-5 max-w-xl text-base leading-8 text-green-dark/55">
