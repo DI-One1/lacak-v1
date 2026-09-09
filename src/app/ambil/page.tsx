@@ -22,7 +22,7 @@ export default async function AmbilBarangPage() {
     <div className="container mx-auto px-4 md:px-8 py-8 max-w-4xl flex-grow">
       <div className="mb-8">
         <Link
-          href="/"
+          href="/dashboard"
           className="text-sm text-gray-500 hover:text-[#3dbd84] flex items-center gap-2 w-fit mb-4 transition-colors"
         >
           <span>&larr;</span> Kembali ke Beranda
