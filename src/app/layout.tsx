@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import { Suspense } from "react";
 
 import "./globals.css";
-import Navbar from "@/components/shared/Navbar";
+import RouteChrome from "@/components/shared/RouteChrome";
+import RouteFooter from "@/components/shared/RouteFooter";
+import { prisma } from "@/lib/prisma";
 import { ClerkProvider } from "@clerk/nextjs";
 import { syncUserToDatabase } from "@/lib/sync-user";
 
@@ -24,6 +26,12 @@ export default async function RootLayout({
 }>) {
   // Jalankan sinkronisasi user Clerk ke database PostgreSQL
   await syncUserToDatabase();
+  const [categories, colors, brands, locations] = await Promise.all([
+    prisma.categoryItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    prisma.colorItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    prisma.brandItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    prisma.locationItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <ClerkProvider>
@@ -36,16 +44,14 @@ export default async function RootLayout({
               <header className="bg-[#0d3b2e] min-h-[120px]" />
             }
           >
-            <Navbar />
+            <RouteChrome publicData={{ categories, colors, brands, locations }} />
           </Suspense>
 
           <main className="flex-grow flex flex-col">
             {children}
           </main>
 
-          <footer className="bg-[#0d3b2e] text-white py-5 text-center text-xs">
-            © 2026 LACAK oleh Akbar. Seluruh Hak Cipta Dilindungi.
-          </footer>
+          <RouteFooter />
         </body>
       </html>
     </ClerkProvider>

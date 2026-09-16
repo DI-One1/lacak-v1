@@ -160,7 +160,18 @@ function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/10 to-transparent" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 py-28 md:px-10 md:py-36 lg:px-12 lg:py-44">
+      <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-28 md:px-10 md:pt-12 md:pb-36 lg:px-12 lg:pt-14 lg:pb-44">
+        {/* Tombol Kembali ke Beranda */}
+        <div className="mb-10 sm:mb-12">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-full border border-green-dark/15 bg-white/80 px-4 py-2 text-xs font-semibold text-green-dark backdrop-blur-xs transition-all hover:bg-white hover:border-green-dark/30 hover:shadow-xs group"
+          >
+            <span className="transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
+            <span>Kembali ke Beranda</span>
+          </Link>
+        </div>
+
         <div className="max-w-4xl">
           <Eyebrow>lacak-v1</Eyebrow>
 
@@ -452,13 +463,14 @@ function ClosingCTA() {
 
 export default function AboutPage() {
   return (
-    <main className="flex flex-col bg-cream font-poppins text-green-dark">
+    <div className="min-h-screen bg-cream">
       <Hero />
       <Introduction />
       <ProcessTimeline />
       <VisionQuote />
       <TeamSection />
       <ClosingCTA />
-    </main>
+    </div>
   );
 }
+

@@ -9,10 +9,12 @@ const ALLOWED_EMAIL = "lacak.smktibazma@gmail.com";
 
 const isPublicRoute = createRouteMatcher([
   "/",
+  "/pencarian(.*)",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/access-denied(.*)",
   "/tentang-kami(.*)",
+  "/beri-saran(.*)",
   "/api/public(.*)",
   "/api/v1/public(.*)",
 ]);

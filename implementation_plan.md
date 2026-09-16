@@ -1,113 +1,106 @@
-# Rencana Implementasi Restrukturisasi Folder & File modular profesional `lacak-v1`
+# Rencana Implementasi: Upgrade Halaman Publik LACAK
 
-Dokumen ini merinci rencana penyelesaian migrasi arsitektur pada proyek `lacak-v1` menuju **Proposed Architecture** yang bersih dan berorientasi fitur (*domain-driven feature layer*). Rencana ini juga menangani isu-isu kritis/penting yang tercantum dalam `audit_report.md`.
-
-## Analisis Kondisi Aktual (GAP)
-
-1. **Routing Layer (`src/app/`)**:
-   - Halaman data warga (`src/app/data-warga/page.tsx`) masih menggunakan `WargaClient.tsx` lama yang berada di folder routing.
-   - Halaman pengambilan barang (`src/app/ambil/page.tsx`) masih menggunakan `AmbilBarangClient.tsx` lama.
-   - Berkas `middleware.ts` sudah ada di `/src/middleware.ts` (aman dan aktif).
-2. **Components (`src/components/`)**:
-   - Terdapat folder `src/components/navbar/` yang duplikat dengan `src/components/shared/`.
-   - `Navbar` yang aktif di `layout.tsx` adalah versi lama (`@/components/navbar/Navbar`) yang menggunakan `SearchBar` non-debounced.
-   - Komponen visual `StepDetailBarang.tsx` masih berada di `src/components/lapor/`.
-   - Komponen `SearchableFoundItem.tsx` masih berada di `src/components/`.
-   - Komponen serah terima klaim (`StepPilihLaporan.tsx`, `StepIdentifikasiBarang.tsx`, `StepKonfirmasiKlaim.tsx`) masih berada di `src/components/ambil/`.
-3. **Features (`src/features/`)**:
-   - `src/features/claim/` belum dibuat.
-   - `src/features/item/components/` belum dibuat.
-   - Actions dan components yang berada di fitur belum diintegrasikan kembali ke halaman `app/`.
+Dokumen ini merinci langkah-langkah implementasi peningkatan halaman publik `lacak-v1` berdasarkan desain `lacak-public-page-example`, dengan mempertahankan logo asli LACAK, menjaga halaman petugas tetap utuh, mengamankan interaksi WhatsApp via autentikasi Clerk, serta menambahkan fitur Beri Saran terhubung ke Gmail.
 
 ---
 
-## Proposed Changes
+## 1. Lingkup Pekerjaan & Keputusan Desain
 
-### 1. Komponen Pendukung Global & Layout (`components/`)
-
-#### [MODIFY] [layout.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/layout.tsx)
-- Ganti import `Navbar` dari `@/components/navbar/Navbar` ke `@/components/shared/Navbar`.
-- Hubungkan/jalankan fungsi `syncUserToDatabase()` di dalam Server Component `RootLayout` untuk memicu sinkronisasi user Clerk ke tabel database `users` secara otomatis setiap kali ada interaksi.
-
-#### [DELETE] [navbar](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/components/navbar)
-- Hapus folder `src/components/navbar/` beserta isinya karena sudah diduplikasi secara bersih di `src/components/shared/`.
-
----
-
-### 2. Domain Warga (`features/warga/`)
-
-#### [MODIFY] [page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/data-warga/page.tsx)
-- Arahkan import `WargaClient` dari local component ke `@/features/warga/components/WargaClient`.
-
-#### [DELETE] [data-warga/components](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/data-warga/components)
-- Hapus file `WargaClient.tsx` dan `WargaRow.tsx` langsung di `src/app/data-warga/`.
-- Hapus subfolder `src/app/data-warga/components/` (karena isinya sudah ada di `src/features/warga/components/`).
-- Hapus `src/components/warga/WargaVerificationCard.tsx` (karena versinya sudah dipindahkan ke `src/features/warga/components/WargaVerificationCard.tsx`).
-
----
-
-### 3. Domain Barang / Item (`features/item/`)
-
-#### [NEW] [item/components](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/features/item/components)
-- Pindahkan `src/components/lapor/StepDetailBarang.tsx` ke `src/features/item/components/StepDetailBarang.tsx`.
-- Pindahkan `src/components/SearchableFoundItem.tsx` ke `src/features/item/components/SearchableFoundItem.tsx`.
-- Refactor import di `StepDetailBarang.tsx` dan `SearchableFoundItem.tsx` untuk:
-  - Mengambil actions dari `@/features/item/actions/...` bukan `@/lib/actions/...`.
-  - Menggunakan modal global `<Modal>` (dari `@/components/ui/Modal`) dengan z-index `z-[2000]` dan focus trap di `SearchableFoundItem.tsx`.
-
-#### [MODIFY] [LaporForm.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/lapor/LaporForm.tsx)
-- Ganti import `createLostReport` ke `@/features/item/actions/lost-report`.
-- Ganti import `getSemuaWarga` ke `@/features/warga/actions`.
-- Ganti import `WargaVerificationCard` ke `@/features/warga/components/WargaVerificationCard`.
-- Ganti import `StepDetailBarang` ke `@/features/item/components/StepDetailBarang`.
-- Perbarui tipe `Warga` ke `@/features/warga/types`.
-
-#### [MODIFY] [TaruhBarangForm.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/taruh/TaruhBarangForm.tsx)
-- Ganti import `createFoundItem` dan `getBusinessCodePreview` ke `@/features/item/actions/found-item`.
-- Ganti import `getSemuaWarga` ke `@/features/warga/actions`.
-- Ganti import `WargaVerificationCard` ke `@/features/warga/components/WargaVerificationCard`.
-- Perbarui tipe `Warga` ke `@/features/warga/types`.
-
-#### [DELETE] [lapor](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/components/lapor)
-- Hapus folder `src/components/lapor/` lama.
-- Hapus file `src/components/SearchableFoundItem.tsx` lama.
+1. **Halaman Publik (`/`)**:
+   - Mengadopsi tata letak dari `lacak-public-page-example`:
+     - **Navbar Publik**: Logo LACAK orisinal, Search Bar publik, Filter Bar horizontal (Urutkan, Kategori, Warna, Merek, Lokasi, Reset), dan Menu Dropdown (Masuk/Profil, Tentang Kami, Beri Saran).
+     - **Barang Temuan Terbaru (Ticker)**: Animasi marquee/slider otomatis kartu highlight temuan terbaru.
+     - **Kategori Carousel**: Tombol geser kategori yang memfilter katalog secara instan saat diklik.
+     - **Semua Barang Temuan (Katalog Grid)**: Grid kartu barang yang responsif, badge status & kategori, deskripsi ringkas, lokasi, tanggal, serta pagination.
+     - **Modal Detail Barang**: Popup lengkap dengan foto, metadata (merek, warna, lokasi, tanggal), catatan privasi, dan tombol aksi WhatsApp.
+2. **Proteksi Akses (Auth Guard)**:
+   - **Tamu / Pengunjung Tanpa Login**: Bebas mencari barang, menyaring kategori, dan melihat detail barang (Read-Only).
+   - **Tombol WhatsApp (Chat Admin)**: Wajib login terlebih dahulu. Jika belum login, dialihkan untuk login ke Clerk. Setelah login, pesan WhatsApp otomatis terisi identitas pengguna (*pre-filled* nama, email, dan detail barang) untuk mencegah spam / DDoS.
+   - **Halaman Beri Saran (`/beri-saran`)**: Wajib login agar saran yang masuk memiliki identitas jelas.
+3. **Halaman Petugas (Internal)**:
+   - Halaman `/dashboard`, `/taruh`, `/lapor`, `/ambil`, `/data-warga`, dan `/riwayat` **tidak diubah** fungsinya maupun alurnya. Navbar petugas tetap memakai navigasi operasional yang ada.
+4. **Halaman Tentang Kami (`/tentang-kami`)**:
+   - Konten cerita, tim, visi, dan alur proses dipertahankan sepenuhnya.
+   - Navbar dan footer diselaraskan agar seragam dengan halaman publik utama.
+5. **Pengiriman Saran ke Gmail**:
+   - Terdapat 2 opsi:
+     - **Opsi A (Direct Gmail Web - Mirip WA)**: Membuka compose Gmail dengan draft terisi otomatis ke `lacak.smktibazma@gmail.com` tanpa pihak ketiga.
+     - **Opsi B (Form Otomatis via API)**: Pengguna mengisi form di website, sistem mengirim email ke `lacak.smktibazma@gmail.com` via Nodemailer / Resend dan/atau menyimpan ke database.
 
 ---
 
-### 4. Domain Klaim / Claim (`features/claim/`)
+## 2. Proposed Changes
 
-#### [NEW] [claim](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/features/claim)
-- Buat folder `src/features/claim/`.
-- **`actions.ts`**: Pindahkan business logic dari `src/lib/actions/claim.ts`.
-  > [!IMPORTANT]
-  > Optimalkan fungsi action agar *tidak* memanggil `checkAndExpireItems` pada pembacaan (seperti `verifyItemExists`, `getActiveLostReportsOfWarga`, `getMatchingFoundItemsForReport`). Fungsi `checkAndExpireItems` hanya dipanggil di write operation `processClaimItem`.
-- **`types.ts`**: Tentukan tipe data lokal yang relevan untuk klaim.
-- **`components/`**:
-  - Pindahkan `src/components/ambil/StepPilihLaporan.tsx` ke `src/features/claim/components/StepPilihLaporan.tsx`.
-  - Pindahkan `src/components/ambil/StepIdentifikasiBarang.tsx` ke `src/features/claim/components/StepIdentifikasiBarang.tsx`.
-  - Pindahkan `src/components/ambil/StepKonfirmasiKlaim.tsx` ke `src/features/claim/components/StepKonfirmasiKlaim.tsx`.
-  - Pindahkan `src/app/ambil/AmbilBarangClient.tsx` ke `src/features/claim/components/AmbilBarangClient.tsx`.
-  - Refactor component-component di atas agar mengonsumsi actions dari `@/features/claim/actions` dan tipe-tipe modular.
+### Komponen Shared & Navigasi
 
-#### [MODIFY] [page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/app/ambil/page.tsx)
-- Ganti import `getSemuaWarga` ke `@/features/warga/actions`.
-- Ganti import `AmbilBarangClient` ke `@/features/claim/components/AmbilBarangClient`.
-
-#### [DELETE] [ambil](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/Lainnya/Belajar/lacak-project/lacak-v1/src/components/ambil)
-- Hapus folder `src/components/ambil/` lama.
-- Hapus file `src/app/ambil/AmbilBarangClient.tsx` lama.
+#### [MODIFY] [Navbar.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/shared/Navbar.tsx)
+- Memisahkan tampilan untuk rute publik (`/`, `/tentang-kami`, `/beri-saran`):
+  - Menggunakan logo teks orisinal LACAK.
+  - Menyediakan search bar dan menu burger responsif (Masuk/User Profile, Tentang Kami, Beri Saran).
+  - Khusus halaman beranda (`/`), menampilkan bar filter horizontal (Urutkan, Kategori, Warna, Merek, Lokasi, Reset) yang terhubung ke state katalog.
+- Mempertahankan tampilan navbar petugas untuk rute internal (`/dashboard`, dll.) tanpa perubahan.
 
 ---
 
-## Rencana Verifikasi
+### Halaman Beranda Publik (`/`)
 
-### Automated Verification
-Setelah menerapkan seluruh restrukturisasi di atas, jalankan perintah berikut:
-1. Periksa type-safety: `npx tsc --noEmit`
-2. Jalankan build aplikasi: `npm run build`
+#### [MODIFY] [page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/app/page.tsx)
+- Server component yang mengambil data dari database:
+  - `FoundItem` (status `FOUND`, relasi ke `jenis`, `warna`, `merek`, `lokasi`).
+  - Master data untuk filter: daftar jenis (`CategoryItem`), warna (`ColorItem`), merek (`BrandItem`), dan lokasi (`LocationItem`).
+- Meneruskan data ke client container `PublicPortal`.
+
+#### [NEW] `src/components/public/PublicPortal.tsx`
+- Mengelola state pencarian, filter, pemilihan kategori, paginasi, dan item yang sedang dibuka di modal detail.
+- Menghubungkan filter bar di navbar dengan katalog.
+
+#### [NEW] `src/components/public/LatestItemsTicker.tsx`
+- Menampilkan section *"Barang Temuan Terbaru"* dengan slider/marquee kartu highlight beranimasi halus dan jeda saat hover.
+
+#### [NEW] `src/components/public/CategoryCarousel.tsx`
+- Menampilkan daftar tombol kategori dengan ikon, tombol navigasi geser kiri/kanan, dan status aktif.
+
+#### [NEW] `src/components/public/CatalogGrid.tsx`
+- Menampilkan grid kartu barang temuan, indikator hasil, empty state jika pencarian nihil, dan navigasi halaman (pagination).
+
+#### [NEW] `src/components/public/ItemDetailModal.tsx`
+- Modal dialog detail barang temuan.
+- Dilengkapi tombol *"Chat Admin untuk Pengambilan"*:
+  - Cek status login Clerk.
+  - Jika belum login: memunculkan dialog/ajakan login.
+  - Jika sudah login: membuka link `https://wa.me/...` dengan teks identitas terisi otomatis.
+
+---
+
+### Halaman Beri Saran (`/beri-saran`)
+
+#### [NEW] `src/app/beri-saran/page.tsx`
+- Halaman formulir masukan/saran publik.
+- Memeriksa status login (jika belum login, tampilkan banner ajakan masuk dengan tombol Login Clerk).
+- Menyediakan pengiriman saran ke Gmail admin.
+
+---
+
+### Penyelarasan Halaman Tentang Kami (`/tentang-kami`)
+
+#### [MODIFY] [tentang-kami/page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/app/tentang-kami/page.tsx)
+- Menyelaraskan footer dan padding atas agar pas dengan navbar publik baru.
+
+---
+
+## 3. Rencana Verifikasi
 
 ### Manual Verification
-1. Masuk ke halaman **Data Warga** dan pastikan penambahan warga, sinkronisasi realtime, riwayat aksi, dan popup modal berjalan mulus.
-2. Masuk ke halaman **Taruh Barang** dan **Lapor Kehilangan**, pastikan form pencarian barang (debounced) dan verifikasi identitas warga berfungsi.
-3. Masuk ke halaman **Ambil Barang**, pastikan alur klaim berjalan tanpa error.
-4. Lakukan pengecekan pada notifikasi dropdown di Navbar, pastikan dropdown dapat ditutup dengan tombol `Escape` dan z-index modal dialog berada di atas Navbar.
+1. **Navigasi Publik vs Petugas**:
+   - Buka `/` dan `/tentang-kami` sebagai tamu -> pastikan navbar publik muncul dengan logo LACAK, search bar, dropdown menu, dan filter.
+   - Buka `/dashboard` sebagai akun admin (`lacak.smktibazma@gmail.com`) -> pastikan navigasi petugas, form lapor, taruh, ambil, dan riwayat berjalan normal tanpa gangguan.
+2. **Filter & Pencarian Real-Time**:
+   - Ketik kata kunci di kolom cari -> pastikan barang langsung terfilter.
+   - Klik salah satu kategori (misal: "Jaket" atau "Elektronik") -> pastikan grid barang tersaring sesuai kategori.
+   - Pilih filter warna/lokasi/merek -> pastikan kombinasi filter bekerja.
+   - Klik tombol "Reset Filter" -> kembali ke kondisi awal.
+3. **Pengujian Modal & Proteksi WhatsApp**:
+   - Klik kartu barang tanpa login -> modal terbuka -> klik tombol "Chat Admin" -> muncul ajakan login.
+   - Login dengan akun biasa -> klik tombol "Chat Admin" -> WhatsApp terbuka dengan format pesan berisi identitas user dan ID barang.
+4. **Pengujian Halaman Beri Saran**:
+   - Buka `/beri-saran` -> coba kirim saran ke Gmail admin.
