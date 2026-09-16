@@ -40,6 +40,7 @@ export default function PublicNavbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState<PublicFilterState>(() => ({
     searchQuery: searchParams.get("q") || "",
@@ -56,12 +57,14 @@ export default function PublicNavbar({
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+      const inToggle = mobileMenuRef.current?.contains(event.target as Node);
+      const inDrawer = mobileDrawerRef.current?.contains(event.target as Node);
+      if (!inToggle && !inDrawer) {
         setMobileMenuOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   // Close menus on route changes
@@ -406,7 +409,7 @@ export default function PublicNavbar({
 
         {/* Mobile Drawer Panel (lg:hidden) */}
         {mobileMenuOpen && (
-          <div className="lg:hidden w-full mt-2 pt-2.5 pb-1 border-t border-[#edf4f1] animate-fadeIn">
+          <div className="lg:hidden w-full mt-2 pt-2.5 pb-1 border-t border-[#edf4f1] animate-fadeIn" ref={mobileDrawerRef}>
             {/* If signed in: Full user profile card */}
             {isLoaded && isSignedIn && (
               <div className="mb-3 p-3 rounded-xl bg-[#f6faf8] border border-[#e2ede8]">
