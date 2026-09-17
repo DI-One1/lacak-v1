@@ -19,7 +19,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/v1/public(.*)",
 ]);
 
-export const middleware = clerkMiddleware(async (auth, request) => {
+const handler = clerkMiddleware(async (auth, request) => {
   // ==========================================
   // PUBLIC ROUTES
   // ==========================================
@@ -101,7 +101,8 @@ export const middleware = clerkMiddleware(async (auth, request) => {
   return NextResponse.next();
 });
 
-export default middleware;
+export const proxy = handler;
+export default handler;
 
 export const config = {
   matcher: [
