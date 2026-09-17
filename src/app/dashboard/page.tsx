@@ -1,4 +1,5 @@
 import { PrefetchLink } from "@/components/ui/PrefetchLink";
+import { MODULE_CARD_IMAGES } from "@/constants/assets";
 import { PackagePlus, PackageCheck, FileSpreadsheet, ArrowRight, Sparkles } from "lucide-react";
 
 export default function HomePage() {
@@ -26,7 +27,7 @@ export default function HomePage() {
           <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
             <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
               <img 
-                src="https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=600&q=80" 
+                src={MODULE_CARD_IMAGES.taruhBarang} 
                 alt="Taruh Barang" 
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
               />
@@ -60,7 +61,7 @@ export default function HomePage() {
           <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
             <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
               <img 
-                src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=600&q=80" 
+                src={MODULE_CARD_IMAGES.ambilBarang} 
                 alt="Ambil Barang" 
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
               />
@@ -94,7 +95,7 @@ export default function HomePage() {
           <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
             <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
               <img 
-                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80" 
+                src={MODULE_CARD_IMAGES.laporKehilangan} 
                 alt="Laporan Kehilangan" 
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
               />

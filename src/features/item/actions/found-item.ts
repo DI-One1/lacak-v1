@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { generateBusinessCode } from "@/utils/codeGenerator";
+import { generateBusinessCode } from "@/lib/utils/codeGenerator";
 import { processNewFoundItemMatch } from "./matching";
 import { checkAndExpireItems } from "./item-lifecycle";
 

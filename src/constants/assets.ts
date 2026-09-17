@@ -1,23 +1,20 @@
-export interface PublicFoundItem {
-  id: string;
-  businessCode: string;
-  jenis: { name: string };
-  warna: { name: string };
-  merek: { name: string };
-  lokasi: { name: string };
-  additionalDesc: string | null;
-  createdAt: string;
-}
-
-export interface MasterFilterData {
-  categories: { id: string; name: string }[];
-  colors: { id: string; name: string }[];
-  brands: { id: string; name: string }[];
-  locations: { id: string; name: string }[];
-}
+// ============================================================================
+// 🖼️ LACAK-V1 ASSETS & IMAGE CONSTANTS
+// Centralized asset URLs for default images, category representative images,
+// and dashboard module card banners.
+// ============================================================================
 
 export const DEFAULT_ITEM_IMAGE =
   "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80";
+
+export const MODULE_CARD_IMAGES = {
+  taruhBarang:
+    "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=600&q=80",
+  ambilBarang:
+    "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=600&q=80",
+  laporKehilangan:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80",
+};
 
 export const CATEGORY_IMAGES: Record<string, string> = {
   Elektronik:
@@ -63,74 +60,3 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   Lainnya:
     "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80",
 };
-
-export const CATEGORY_ICONS: Record<string, string> = {
-  Elektronik: "🎧",
-  "Komputer & Aksesoris": "💻",
-  "Handphone & Aksesoris": "📱",
-  "Dompet & Uang": "👛",
-  "Dokumen/Kertas": "📄",
-  "Pakaian/Tas": "🎒",
-  Tas: "🎒",
-  Dompet: "👛",
-  Jaket: "🧥",
-  "Jas Hujan": "🌧️",
-  Kemeja: "👔",
-  Kaos: "👕",
-  "Pakaian Olahraga": "🏃",
-  Sepatu: "👟",
-  "Jam Tangan": "⌚",
-  "Botol & Tumbler": "🍶",
-  "Perlengkapan Makan": "🍽️",
-  Kacamata: "👓",
-  "Perlengkapan Rumah": "🏠",
-  Kunci: "🔑",
-  Aksesoris: "💍",
-  "Buku & Alat Tulis": "📚",
-  Lainnya: "📦",
-};
-
-export function getCategoryRepresentativeImage(categoryName: string): string {
-  if (CATEGORY_IMAGES[categoryName]) {
-    return CATEGORY_IMAGES[categoryName];
-  }
-  const lower = categoryName.toLowerCase();
-  for (const [key, val] of Object.entries(CATEGORY_IMAGES)) {
-    if (lower.includes(key.toLowerCase()) || key.toLowerCase().includes(lower)) {
-      return val;
-    }
-  }
-  return DEFAULT_ITEM_IMAGE;
-}
-
-export function getCategoryIcon(categoryName: string): string {
-  if (CATEGORY_ICONS[categoryName]) {
-    return CATEGORY_ICONS[categoryName];
-  }
-  const lower = categoryName.toLowerCase();
-  for (const [key, val] of Object.entries(CATEGORY_ICONS)) {
-    if (lower.includes(key.toLowerCase()) || key.toLowerCase().includes(lower)) {
-      return val;
-    }
-  }
-  return "🏷️";
-}
-
-export function getItemTitle(item: PublicFoundItem): string {
-  if (!item.merek || item.merek.name === "Tanpa Merek") {
-    return item.jenis.name;
-  }
-  return `${item.jenis.name} ${item.merek.name}`;
-}
-
-export function formatIndonesianDate(isoString: string): string {
-  try {
-    return new Date(isoString).toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  } catch {
-    return isoString;
-  }
-}

@@ -5,7 +5,7 @@ import {
   PublicFoundItem,
   MasterFilterData,
   getItemTitle,
-} from "./public-utils";
+} from "@/features/item/utils/public-item-utils";
 import LatestItemsTicker from "./LatestItemsTicker";
 import CategoryCarousel from "./CategoryCarousel";
 import CatalogGrid from "./CatalogGrid";

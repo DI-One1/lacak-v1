@@ -9,7 +9,7 @@ import {
   getCategoryRepresentativeImage,
   formatIndonesianDate,
   DEFAULT_ITEM_IMAGE,
-} from "./public-utils";
+} from "@/features/item/utils/public-item-utils";
 
 interface ItemDetailModalProps {
   item: PublicFoundItem | null;

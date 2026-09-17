@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { timeAgo } from "@/utils/dateFormat";
+import { timeAgo } from "@/lib/utils/dateFormat";
 
 interface PengambilanRowProps {
   item: any;

@@ -1,55 +1,15 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-
-/* ─── Public type (no sensitive fields) ─── */
-export interface PublicFoundItem {
-  id: string;
-  jenis: { name: string };
-  warna: { name: string };
-  merek: { name: string };
-  lokasi: { name: string };
-  additionalDesc: string | null;
-  createdAt: string;
-}
+import {
+  PublicFoundItem,
+  getItemTitle,
+  formatIndonesianDate,
+  getCategoryRepresentativeImage,
+} from "@/features/item/utils/public-item-utils";
 
 interface Props {
   items: PublicFoundItem[];
-}
-
-/* ─── Category → representative image ─── */
-const CATEGORY_IMAGES: Record<string, string> = {
-  Elektronik:
-    "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=1060&fit=crop&crop=center&q=80",
-  "Dompet & Uang":
-    "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&h=1060&fit=crop&crop=center&q=80",
-  "Dokumen/Kertas":
-    "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&h=1060&fit=crop&crop=center&q=80",
-  "Pakaian/Tas":
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=1060&fit=crop&crop=center&q=80",
-  Kunci:
-    "https://images.unsplash.com/photo-1609770231080-e321deccc34c?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8a3VuY2klMjBzdWtzZXN8ZW58MHx8MHx8fDA%3D",
-  Aksesoris:
-    "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=1060&fit=crop&crop=center&q=80",
-  Lainnya:
-    "https://images.unsplash.com/photo-1540759786422-c60d5ede1007?w=800&h=1060&fit=crop&crop=center&q=80",
-};
-
-function getImage(category: string): string {
-  return CATEGORY_IMAGES[category] || CATEGORY_IMAGES["Lainnya"];
-}
-
-function fmtDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function itemTitle(item: PublicFoundItem): string {
-  if (item.merek.name === "Tanpa Merek") return item.jenis.name;
-  return `${item.jenis.name} ${item.merek.name}`;
 }
 
 /* ─── Easing ─── */
@@ -96,7 +56,7 @@ export default function CarouselFoundItems({ items }: Props) {
   /* ── navigation ── */
   const goTo = useCallback(
     (n: number) => setIdx(Math.max(0, Math.min(n, total - 1))),
-    [total],
+    [total]
   );
   const prev = useCallback(() => goTo(idx - 1), [idx, goTo]);
   const next = useCallback(() => goTo(idx + 1), [idx, goTo]);
@@ -135,7 +95,7 @@ export default function CarouselFoundItems({ items }: Props) {
         wasDraggingRef.current = true;
       }
     },
-    [dragging],
+    [dragging]
   );
 
   const onUp = useCallback(() => {
@@ -160,7 +120,7 @@ export default function CarouselFoundItems({ items }: Props) {
   function openDetail(item: PublicFoundItem) {
     setDetail(item);
     requestAnimationFrame(() =>
-      requestAnimationFrame(() => setDetailVisible(true)),
+      requestAnimationFrame(() => setDetailVisible(true))
     );
   }
   function closeDetail() {
@@ -169,11 +129,17 @@ export default function CarouselFoundItems({ items }: Props) {
   }
   function detailPrev() {
     const i = items.findIndex((x) => x.id === detail?.id);
-    if (i > 0) { setDetail(items[i - 1]); setIdx(i - 1); }
+    if (i > 0) {
+      setDetail(items[i - 1]);
+      setIdx(i - 1);
+    }
   }
   function detailNext() {
     const i = items.findIndex((x) => x.id === detail?.id);
-    if (i < total - 1) { setDetail(items[i + 1]); setIdx(i + 1); }
+    if (i < total - 1) {
+      setDetail(items[i + 1]);
+      setIdx(i + 1);
+    }
   }
   const detailIdx = detail ? items.findIndex((x) => x.id === detail.id) : -1;
 
@@ -220,7 +186,7 @@ export default function CarouselFoundItems({ items }: Props) {
             Barang Temuan
           </h1>
           <p className="mt-4 text-base md:text-lg text-gray-400 max-w-lg mx-auto leading-relaxed">
-            Daftar barang yang telah diamankan di SMK TI Bazma
+            Daftar barang temuan yang telah diamankan
           </p>
         </div>
 
@@ -239,9 +205,7 @@ export default function CarouselFoundItems({ items }: Props) {
             style={{
               gap: `${GAP}px`,
               transform: `translateX(${tx}px)`,
-              transition: dragging
-                ? "none"
-                : `transform 520ms ${EASE}`,
+              transition: dragging ? "none" : `transform 520ms ${EASE}`,
             }}
           >
             {items.map((item, i) => {
@@ -256,9 +220,7 @@ export default function CarouselFoundItems({ items }: Props) {
                     transform: `scale(${active ? 1 : 0.9})`,
                     opacity: dist > 2 ? 0 : active ? 1 : 0.45,
                     filter: active ? "none" : "brightness(0.9)",
-                    transition: dragging
-                      ? "none"
-                      : `all 520ms ${EASE}`,
+                    transition: dragging ? "none" : `all 520ms ${EASE}`,
                     pointerEvents: "auto",
                   }}
                 >
@@ -274,7 +236,7 @@ export default function CarouselFoundItems({ items }: Props) {
                     className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3dbd84] group"
                     tabIndex={active ? 0 : -1}
                     style={{ pointerEvents: active ? "auto" : "none" }}
-                    aria-label={`Lihat detail ${itemTitle(item)}`}
+                    aria-label={`Lihat detail ${getItemTitle(item)}`}
                   >
                     {/* image */}
                     <div
@@ -282,7 +244,7 @@ export default function CarouselFoundItems({ items }: Props) {
                       style={{ aspectRatio: "3 / 4" }}
                     >
                       <img
-                        src={getImage(item.jenis.name)}
+                        src={getCategoryRepresentativeImage(item.jenis.name)}
                         alt={`${item.jenis.name} — ${item.merek.name}`}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                         draggable={false}
@@ -299,7 +261,7 @@ export default function CarouselFoundItems({ items }: Props) {
                     {/* caption */}
                     <div className="mt-4">
                       <h3 className="text-[1.05rem] font-bold text-[#0d3b2e] leading-snug">
-                        {itemTitle(item)}
+                        {getItemTitle(item)}
                       </h3>
                       <p className="text-[0.82rem] text-gray-400 mt-1">
                         {item.warna.name} · {item.lokasi.name}
@@ -352,7 +314,7 @@ export default function CarouselFoundItems({ items }: Props) {
           className="fixed inset-0 z-[1100] flex items-end md:items-center justify-center"
           role="dialog"
           aria-modal="true"
-          aria-label={`Detail: ${itemTitle(detail)}`}
+          aria-label={`Detail: ${getItemTitle(detail)}`}
           onClick={closeDetail}
         >
           {/* backdrop */}
@@ -385,7 +347,7 @@ export default function CarouselFoundItems({ items }: Props) {
                 style={{ aspectRatio: "3 / 4" }}
               >
                 <img
-                  src={getImage(detail.jenis.name)}
+                  src={getCategoryRepresentativeImage(detail.jenis.name)}
                   alt={detail.jenis.name}
                   className="w-full h-full object-cover"
                 />
@@ -415,7 +377,7 @@ export default function CarouselFoundItems({ items }: Props) {
                       Barang Temuan
                     </p>
                     <h2 className="text-2xl md:text-[1.75rem] font-extrabold text-[#0d3b2e] leading-tight">
-                      {itemTitle(detail)}
+                      {getItemTitle(detail)}
                     </h2>
                   </div>
 
@@ -444,7 +406,7 @@ export default function CarouselFoundItems({ items }: Props) {
                         Tanggal Ditemukan
                       </dt>
                       <dd className="text-[0.95rem] font-medium text-gray-800">
-                        {fmtDate(detail.createdAt)}
+                        {formatIndonesianDate(detail.createdAt)}
                       </dd>
                     </div>
                     {detail.additionalDesc && (

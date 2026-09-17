@@ -6,7 +6,7 @@ import {
   getCategoryRepresentativeImage,
   formatIndonesianDate,
   DEFAULT_ITEM_IMAGE,
-} from "@/components/public/public-utils";
+} from "@/features/item/utils/public-item-utils";
 
 interface ItemCardProps {
   item: PublicFoundItem;

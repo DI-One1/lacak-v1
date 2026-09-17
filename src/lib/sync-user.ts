@@ -63,7 +63,15 @@ export async function syncUserToDatabase() {
     });
 
     return user;
-  } catch (error) {
+  } catch (error: any) {
+    // Abaikan log error saat Next.js melakukan analisis static page / pre-render saat build
+    if (
+      error?.digest === "DYNAMIC_SERVER_USAGE" ||
+      error?.message?.includes("Dynamic server usage")
+    ) {
+      return null;
+    }
+
     console.error("Gagal melakukan sinkronisasi user:", error);
 
     return null;

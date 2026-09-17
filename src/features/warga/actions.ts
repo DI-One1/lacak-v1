@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { generateNextNIS } from "@/utils/nisGenerator";
+import { generateNextNIS } from "@/lib/utils/nisGenerator";
 import { WargaActivityItem } from "./types";
 
 /**

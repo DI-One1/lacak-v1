@@ -35,9 +35,5 @@ export async function generateBusinessCode(params: {
   // 5. Generate Serial
   const nextSerial = String(existingCount + 1).padStart(4, "0");
 
-  // Format akhir baru
-  // NOTE: Concurrency Race Condition mitigation.
-  // In the future, a retry loop can be integrated here: if a unique constraint error
-  // occurs on the businessCode field, generateBusinessCode should be retried to obtain a fresh count + 1.
   return `${prefix}-${nextSerial}`;
 }

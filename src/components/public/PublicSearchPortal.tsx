@@ -2,13 +2,13 @@
 
 import { useMemo, useState, useEffect } from "react";
 import ItemDetailModal from "./ItemDetailModal";
-import type { MasterFilterData, PublicFoundItem } from "./public-utils";
+import type { MasterFilterData, PublicFoundItem } from "@/features/item/utils/public-item-utils";
 import {
   getItemTitle,
   getCategoryRepresentativeImage,
   formatIndonesianDate,
   DEFAULT_ITEM_IMAGE,
-} from "./public-utils";
+} from "@/features/item/utils/public-item-utils";
 
 interface PublicSearchPortalProps {
   initialItems: PublicFoundItem[];

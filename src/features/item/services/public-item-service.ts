@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { MasterFilterData, PublicFoundItem } from "./public-utils";
+import type { MasterFilterData, PublicFoundItem } from "../utils/public-item-utils";
 
 export async function getPublicData(): Promise<{
   items: PublicFoundItem[];

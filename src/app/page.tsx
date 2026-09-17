@@ -1,5 +1,5 @@
 import PublicPortal from "@/components/public/PublicPortal";
-import { getPublicData } from "@/components/public/public-data";
+import { getPublicData } from "@/features/item/services/public-item-service";
 
 export const dynamic = "force-dynamic";
 

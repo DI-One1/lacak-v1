@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, SearchX, Grid } from "lucide-react";
-import { PublicFoundItem } from "./public-utils";
+import { PublicFoundItem } from "@/features/item/utils/public-item-utils";
 import { ItemCard } from "@/components/ui/ItemCard";
 
 interface CatalogGridProps {

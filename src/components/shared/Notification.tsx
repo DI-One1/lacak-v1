@@ -9,7 +9,7 @@ import {
   markOneAsRead,
   SerializedNotification,
 } from "@/features/item/actions/notification";
-import { timeAgo } from "@/utils/dateFormat";
+import { timeAgo } from "@/lib/utils/dateFormat";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 

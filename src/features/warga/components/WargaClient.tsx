@@ -179,7 +179,7 @@ export default function WargaClient({ initialData }: { initialData: Warga[] }) {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#0d7565] flex items-center gap-2.5">
           <Users className="h-6 w-6 text-[#0d7565]" />
-          <span>Data Warga BAZMA</span>
+          <span>Data Warga</span>
         </h1>
 
         <span className="text-xs font-semibold text-[#57706a] bg-[#eef7f4] px-3 py-1.5 rounded-full border border-[#d6e5df]">

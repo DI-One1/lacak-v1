@@ -6,7 +6,7 @@ import {
   getItemTitle,
   getCategoryRepresentativeImage,
   DEFAULT_ITEM_IMAGE,
-} from "./public-utils";
+} from "@/features/item/utils/public-item-utils";
 
 interface LatestItemsTickerProps {
   items: PublicFoundItem[];
