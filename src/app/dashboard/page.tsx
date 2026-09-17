@@ -35,9 +35,6 @@ export default function HomePage() {
               <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
                 <PackagePlus className="h-5 w-5" />
               </div>
-              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
-                Input Barang Baru
-              </span>
             </div>
 
             <div className="p-6 flex flex-col flex-grow">
@@ -69,9 +66,6 @@ export default function HomePage() {
               <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
                 <PackageCheck className="h-5 w-5" />
               </div>
-              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
-                Serah Terima
-              </span>
             </div>
 
             <div className="p-6 flex flex-col flex-grow">
@@ -103,9 +97,6 @@ export default function HomePage() {
               <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
                 <FileSpreadsheet className="h-5 w-5" />
               </div>
-              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
-                Pencatatan Kehilangan
-              </span>
             </div>
 
             <div className="p-6 flex flex-col flex-grow">
