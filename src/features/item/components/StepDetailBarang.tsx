@@ -1,5 +1,6 @@
 "use client";
 
+import { Package, Tag, Palette, MapPin, Info, X, CheckCircle2 } from "lucide-react";
 import SearchableFoundItem from "./SearchableFoundItem";
 import { FoundItemMatch } from "../types";
 
@@ -49,12 +50,12 @@ export default function StepDetailBarang({
   onClearFoundItem,
 }: StepDetailBarangProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-6">
-      <h3 className="text-lg font-bold text-green-dark mb-4 flex items-center gap-2">
-        <span className="w-6 h-6 rounded-full bg-green-dark text-white text-xs flex items-center justify-center font-bold">
+    <div className="bg-white rounded-2xl shadow-xs border border-[#e2ece8] p-6 md:p-8 space-y-6">
+      <h3 className="text-base md:text-lg font-bold text-[#0d7565] mb-4 flex items-center gap-2.5">
+        <span className="w-7 h-7 rounded-full bg-[#0d7565] text-white text-xs flex items-center justify-center font-bold shadow-xs">
           2
         </span>
-        Karakteristik & Detail Barang Hilang
+        <span>Karakteristik & Detail Barang Hilang</span>
       </h3>
 
       {/* =====================================
@@ -64,8 +65,9 @@ export default function StepDetailBarang({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* JENIS */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Jenis Barang *
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#57706a] mb-2">
+            <Tag className="h-3.5 w-3.5 text-[#0d7565]" />
+            <span>Jenis Barang *</span>
           </label>
 
           <select
@@ -73,7 +75,7 @@ export default function StepDetailBarang({
             required
             value={jenisId}
             onChange={(e) => onJenisChange(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-accent bg-white transition-all"
+            className="w-full border border-[#d6e5df] rounded-xl px-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#0d7565] focus:ring-2 focus:ring-[#0d7565]/20 bg-white transition-all text-[#142e29]"
           >
             <option value="">Pilih Jenis...</option>
 
@@ -87,8 +89,9 @@ export default function StepDetailBarang({
 
         {/* WARNA */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Warna Dominan *
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#57706a] mb-2">
+            <Palette className="h-3.5 w-3.5 text-[#0d7565]" />
+            <span>Warna Dominan *</span>
           </label>
 
           <select
@@ -96,7 +99,7 @@ export default function StepDetailBarang({
             required
             value={warnaId}
             onChange={(e) => onWarnaChange(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-accent bg-white transition-all"
+            className="w-full border border-[#d6e5df] rounded-xl px-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#0d7565] focus:ring-2 focus:ring-[#0d7565]/20 bg-white transition-all text-[#142e29]"
           >
             <option value="">Pilih Warna...</option>
 
@@ -110,8 +113,9 @@ export default function StepDetailBarang({
 
         {/* MEREK */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Merek / Brand *
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#57706a] mb-2">
+            <Package className="h-3.5 w-3.5 text-[#0d7565]" />
+            <span>Merek / Brand *</span>
           </label>
 
           <select
@@ -119,7 +123,7 @@ export default function StepDetailBarang({
             required
             value={merekId}
             onChange={(e) => onMerekChange(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-accent bg-white transition-all"
+            className="w-full border border-[#d6e5df] rounded-xl px-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#0d7565] focus:ring-2 focus:ring-[#0d7565]/20 bg-white transition-all text-[#142e29]"
           >
             <option value="">Pilih Merek...</option>
 
@@ -133,8 +137,9 @@ export default function StepDetailBarang({
 
         {/* LOKASI */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Perkiraan Lokasi Hilang *
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#57706a] mb-2">
+            <MapPin className="h-3.5 w-3.5 text-[#0d7565]" />
+            <span>Perkiraan Lokasi Hilang *</span>
           </label>
 
           <select
@@ -142,7 +147,7 @@ export default function StepDetailBarang({
             required
             value={lokasiId}
             onChange={(e) => onLokasiChange(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-accent bg-white transition-all"
+            className="w-full border border-[#d6e5df] rounded-xl px-4 py-3 text-xs md:text-sm focus:outline-none focus:border-[#0d7565] focus:ring-2 focus:ring-[#0d7565]/20 bg-white transition-all text-[#142e29]"
           >
             <option value="">Pilih Lokasi...</option>
 
@@ -160,15 +165,16 @@ export default function StepDetailBarang({
       ===================================== */}
 
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-          Ciri Khusus / Deskripsi Tambahan
+        <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#57706a] mb-2">
+          <Info className="h-3.5 w-3.5 text-[#0d7565]" />
+          <span>Ciri Khusus / Deskripsi Tambahan</span>
         </label>
 
         <textarea
           name="additionalDesc"
           rows={3}
           placeholder="Contoh: Ada gantungan kunci anime, layar ada goresan kecil di pojok kanan atas..."
-          className="w-full border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:border-green-accent transition-all"
+          className="w-full border border-[#d6e5df] rounded-xl p-4 text-xs md:text-sm focus:outline-none focus:border-[#0d7565] focus:ring-2 focus:ring-[#0d7565]/20 transition-all text-[#142e29]"
         />
       </div>
 
@@ -176,7 +182,7 @@ export default function StepDetailBarang({
           PENCARIAN BARANG TEMUAN
       ===================================== */}
 
-      <div className="pt-4 border-t border-gray-100">
+      <div className="pt-4 border-t border-[#edf4f1]">
         <SearchableFoundItem
           currentFormState={{
             jenisId,
@@ -193,17 +199,18 @@ export default function StepDetailBarang({
       ===================================== */}
 
       {matchedFoundItem && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between animate-in fade-in duration-300">
+        <div className="p-4 bg-[#eaf6f2] border border-[#a8dbc9] rounded-xl flex items-center justify-between animate-fadeIn">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-green-mid">
-              Barang Temuan Terpilih (Klaim Sekaligus / Jalur 2)
+            <span className="flex items-center gap-1 text-[10.5px] font-bold uppercase tracking-wider text-[#0d7565]">
+              <CheckCircle2 className="h-3.5 w-3.5 text-[#0d7565]" />
+              <span>Barang Temuan Terpilih (Klaim Sekaligus / Jalur 2)</span>
             </span>
 
-            <p className="text-sm font-bold text-green-dark mt-0.5">
+            <p className="text-sm font-bold text-[#0d594f] mt-0.5">
               {matchedFoundItem.jenis?.name} {matchedFoundItem.merek?.name} ({matchedFoundItem.warna?.name})
             </p>
 
-            <p className="text-xs font-mono text-green-mid">
+            <p className="text-xs font-mono text-[#0d7565]">
               Kode Unik: {matchedFoundItem.businessCode} | Lokasi Ditemukan: {matchedFoundItem.lokasi?.name}
             </p>
           </div>
@@ -211,12 +218,14 @@ export default function StepDetailBarang({
           <button
             type="button"
             onClick={onClearFoundItem}
-            className="text-xs text-red-600 hover:text-red-800 font-bold px-3 py-1 bg-white rounded-lg border border-red-200 shadow-sm cursor-pointer"
+            className="inline-flex items-center gap-1 text-xs text-red-600 hover:text-red-800 font-bold px-3 py-1.5 bg-white rounded-lg border border-red-200 shadow-xs cursor-pointer"
           >
-            Batal Pilih
+            <X className="h-3.5 w-3.5" />
+            <span>Batal Pilih</span>
           </button>
         </div>
       )}
     </div>
   );
 }
+

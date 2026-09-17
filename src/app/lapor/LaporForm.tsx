@@ -145,8 +145,27 @@ export default function LaporForm({
 
   return (
     <div className="space-y-6">
+      {/* Visual Step Progress Bar */}
+      <div className="bg-white rounded-2xl p-4 border border-[#e2ece8] shadow-xs flex items-center justify-between gap-4">
+        <div className={`flex items-center gap-2.5 ${verified ? "text-[#0d7565]" : "text-[#102a24]"}`}>
+          <span className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${verified ? "bg-emerald-100 text-emerald-800" : "bg-[#0d7565] text-white"}`}>
+            {verified ? "✓" : "1"}
+          </span>
+          <span className="text-xs font-bold">1. Verifikasi Pelapor</span>
+        </div>
+        <div className="flex-1 h-0.5 bg-[#e2ece8] rounded-full overflow-hidden">
+          <div className={`h-full bg-[#0d7565] transition-all duration-500 ${verified ? "w-full" : "w-0"}`} />
+        </div>
+        <div className={`flex items-center gap-2.5 ${verified ? "text-[#102a24]" : "text-gray-400"}`}>
+          <span className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${verified ? "bg-[#0d7565] text-white" : "bg-gray-100 text-gray-400"}`}>
+            2
+          </span>
+          <span className="text-xs font-bold">2. Detail & Pencocokan</span>
+        </div>
+      </div>
+
       {errorMessage && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm animate-in fade-in duration-300">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs animate-in fade-in duration-300">
           <span>⚠️</span>
           {errorMessage}
         </div>

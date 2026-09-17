@@ -242,7 +242,7 @@ export default function PublicNavbar({
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="text-xs font-bold text-[#142e29] truncate flex items-center gap-1.5">
-                          <span>{user?.fullName || user?.firstName || "Warga BAZMA"}</span>
+                          <span>{user?.fullName || user?.firstName || "Warga"}</span>
                           {isPetugas && (
                             <span className="text-[9px] bg-emerald-100 text-green-dark px-1.5 py-0.5 rounded font-bold uppercase">
                               Petugas
@@ -427,7 +427,7 @@ export default function PublicNavbar({
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-[#142e29] truncate flex items-center gap-1.5">
-                      <span>{user?.fullName || user?.firstName || "Warga BAZMA"}</span>
+                      <span>{user?.fullName || user?.firstName || "Warga"}</span>
                       {isPetugas && (
                         <span className="text-[9px] bg-emerald-100 text-green-dark px-1.5 py-0.5 rounded font-bold uppercase">
                           Petugas

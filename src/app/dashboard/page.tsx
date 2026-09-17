@@ -1,89 +1,132 @@
-import Link from "next/link";
+import { PrefetchLink } from "@/components/ui/PrefetchLink";
+import { PackagePlus, PackageCheck, FileSpreadsheet, ArrowRight, Sparkles } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col h-full"> 
-      
+    <div className="flex flex-col min-h-[calc(100vh-140px)] bg-[#fafcfb]">
       {/* 🟢 KONTEN UTAMA: Aksi LACAK (3 Modul Utama) */}
-      <section className="container mx-auto px-4 md:px-8 my-12 flex-grow">
-        <div className="text-center mb-12">
-          <span className="text-[#3dbd84] font-bold text-xs uppercase tracking-wider">
-            Layanan Cepat
+      <section className="container mx-auto px-4 md:px-8 my-8 md:my-12 flex-grow">
+        <div className="text-center mb-10">
+          <span className="text-[#0d7565] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-[#0d7565]" />
+            <span>Layanan Cepat</span>
           </span>
-          <h2 className="text-3xl font-extrabold text-[#0d3b2e] mt-1 tracking-tight">
-            Aksi LACAK
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#102a24] mt-1 tracking-tight">
+            Aksi Utama Petugas
           </h2>
+          <p className="text-xs text-[#57706a] mt-1 max-w-md mx-auto">
+            Pilih modul kerja di bawah ini untuk memulai proses administrasi barang dan laporan.
+          </p>
         </div>
 
         {/* Grid 3 Modul Utama */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-7 max-w-6xl mx-auto pb-8">
           
           {/* Modul 1: Taruh Barang */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-[#3dbd84]/30">
-            <img 
-              src="https://images.unsplash.com/photo-1595079676339-1534801ad6cf" 
-              alt="Taruh Barang" 
-              className="h-48 w-full object-cover"
-            />
+          <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
+            <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
+              <img 
+                src="https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=600&q=80" 
+                alt="Taruh Barang" 
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061814]/85 via-black/20 to-transparent" />
+              <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
+                <PackagePlus className="h-5 w-5" />
+              </div>
+              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
+                Input Barang Baru
+              </span>
+            </div>
+
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold text-[#0d3b2e] mb-2">Taruh Barang</h4>
-              <p className="text-gray-500 text-xs flex-grow leading-relaxed mb-6">
-                Scan sidik jari penemu, input data barang temuan baru, dan cetak barcode.
+              <h3 className="text-lg font-bold text-[#142e29] mb-2 group-hover:text-[#0d7565] transition-colors">
+                Taruh Barang
+              </h3>
+              <p className="text-[#57706a] text-xs flex-grow leading-relaxed mb-6">
+                Scan sidik jari penemu, input data detail barang temuan baru, dan cetak label barcode lokasi penyimpanan.
               </p>
-              <Link 
+              <PrefetchLink 
                 href="/taruh" 
-                className="bg-[#1a5c44] hover:bg-[#0d3b2e] text-white text-center py-3 rounded-xl text-sm font-semibold transition-colors shadow-sm"
+                className="inline-flex items-center justify-center gap-2 bg-[#0d7565] hover:bg-[#0a5d50] active:scale-[0.98] text-white text-center py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-xs hover:shadow-md cursor-pointer"
               >
-                Mulai Input
-              </Link>
+                <span>Mulai Input Barang</span>
+                <ArrowRight className="h-4 w-4" />
+              </PrefetchLink>
             </div>
           </div>
 
           {/* Modul 2: Ambil Barang */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-[#3dbd84]/30">
-            <img 
-              src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62" 
-              alt="Ambil Barang" 
-              className="h-48 w-full object-cover"
-            />
+          <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
+            <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
+              <img 
+                src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=600&q=80" 
+                alt="Ambil Barang" 
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061814]/85 via-black/20 to-transparent" />
+              <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
+                <PackageCheck className="h-5 w-5" />
+              </div>
+              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
+                Serah Terima
+              </span>
+            </div>
+
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold text-[#0d3b2e] mb-2">Ambil Barang</h4>
-              <p className="text-gray-500 text-xs flex-grow leading-relaxed mb-6">
-                Scan barcode barang dan verifikasi sidik jari pengambil untuk proses serah terima.
+              <h3 className="text-lg font-bold text-[#142e29] mb-2 group-hover:text-[#0d7565] transition-colors">
+                Ambil Barang
+              </h3>
+              <p className="text-[#57706a] text-xs flex-grow leading-relaxed mb-6">
+                Scan barcode barang temuan dan verifikasi identitas/sidik jari pengambil untuk menyelesaikan serah terima.
               </p>
-              <Link 
+              <PrefetchLink 
                 href="/ambil" 
-                className="bg-[#1a5c44] hover:bg-[#0d3b2e] text-white text-center py-3 rounded-xl text-sm font-semibold transition-colors shadow-sm"
+                className="inline-flex items-center justify-center gap-2 bg-[#0d7565] hover:bg-[#0a5d50] active:scale-[0.98] text-white text-center py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-xs hover:shadow-md cursor-pointer"
               >
-                Proses Pengambilan
-              </Link>
+                <span>Proses Pengambilan</span>
+                <ArrowRight className="h-4 w-4" />
+              </PrefetchLink>
             </div>
           </div>
 
           {/* Modul 3: Laporan Kehilangan */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-[#3dbd84]/30">
-            <img 
-              src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85" 
-              alt="Laporan Kehilangan" 
-              className="h-48 w-full object-cover"
-            />
+          <div className="group bg-white rounded-2xl shadow-xs border border-[#e2ece8] overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0d7565]/40">
+            <div className="relative h-48 w-full overflow-hidden bg-[#eef5f2]">
+              <img 
+                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80" 
+                alt="Laporan Kehilangan" 
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061814]/85 via-black/20 to-transparent" />
+              <div className="absolute top-4 left-4 h-10 w-10 rounded-xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d7565] shadow-xs">
+                <FileSpreadsheet className="h-5 w-5" />
+              </div>
+              <span className="absolute bottom-3 left-4 text-white text-[11px] font-semibold bg-emerald-950/70 backdrop-blur-xs px-2.5 py-0.5 rounded-md border border-white/20">
+                Pencatatan Kehilangan
+              </span>
+            </div>
+
             <div className="p-6 flex flex-col flex-grow">
-              <h4 className="text-xl font-bold text-[#0d3b2e] mb-2">Laporan Kehilangan</h4>
-              <p className="text-gray-500 text-xs flex-grow leading-relaxed mb-6">
-                Bantu siswa mencatat detail barang yang hilang agar sistem dapat mencari kecocokan.
+              <h3 className="text-lg font-bold text-[#142e29] mb-2 group-hover:text-[#0d7565] transition-colors">
+                Laporan Kehilangan
+              </h3>
+              <p className="text-[#57706a] text-xs flex-grow leading-relaxed mb-6">
+                Bantu warga/siswa mencatat detail barang yang hilang agar sistem dapat merekomendasikan kecocokan barang temuan.
               </p>
-              <Link 
+              <PrefetchLink 
                 href="/lapor" 
-                className="bg-[#1a5c44] hover:bg-[#0d3b2e] text-white text-center py-3 rounded-xl text-sm font-semibold transition-colors shadow-sm"
+                className="inline-flex items-center justify-center gap-2 bg-[#0d7565] hover:bg-[#0a5d50] active:scale-[0.98] text-white text-center py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-xs hover:shadow-md cursor-pointer"
               >
-                Buat Laporan
-              </Link>
+                <span>Buat Laporan Baru</span>
+                <ArrowRight className="h-4 w-4" />
+              </PrefetchLink>
             </div>
           </div>
 
         </div>
       </section>
-
     </div>
   );
 }
+

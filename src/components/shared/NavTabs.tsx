@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LayoutDashboard, Users, History, ChevronDown, PackagePlus, FileSpreadsheet, PackageCheck } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
@@ -33,27 +34,28 @@ export default function NavTabs() {
           {/* 1. Beranda */}
           <Link
             href="/dashboard"
-            className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
+            className={`whitespace-nowrap text-[0.9rem] font-medium px-3.5 md:px-4 py-3 border-b-[3px] transition-all no-underline flex items-center gap-2 ${
               isActive("/dashboard")
-                ? "text-white font-semibold border-green-accent"
-                : "text-white/65 hover:text-white border-transparent"
+                ? "text-white font-semibold border-[#3dbd84]"
+                : "text-white/75 hover:text-white border-transparent hover:bg-white/5 rounded-t-lg"
             }`}
           >
-            Beranda
+            <LayoutDashboard className="h-4 w-4" />
+            <span>Beranda</span>
           </Link>
 
           {/* 2. Data Warga */}
           <Link
             href="/data-warga"
-            className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all no-underline ${
+            className={`whitespace-nowrap text-[0.9rem] font-medium px-3.5 md:px-4 py-3 border-b-[3px] transition-all no-underline flex items-center gap-2 ${
               isActive("/data-warga")
-                ? "text-white font-semibold border-green-accent"
-                : "text-white/65 hover:text-white border-transparent"
+                ? "text-white font-semibold border-[#3dbd84]"
+                : "text-white/75 hover:text-white border-transparent hover:bg-white/5 rounded-t-lg"
             }`}
           >
-            Data Warga
+            <Users className="h-4 w-4" />
+            <span>Data Warga</span>
           </Link>
-
 
           {/* 3. Dropdown Riwayat */}
           <div className="relative flex-shrink-0" ref={dropdownRef}>
@@ -61,49 +63,54 @@ export default function NavTabs() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               aria-expanded={isDropdownOpen}
               aria-haspopup="true"
-              className={`block whitespace-nowrap text-[0.92rem] font-medium px-3 md:px-[18px] py-[13px] pb-[11px] border-b-[3px] transition-all bg-transparent cursor-pointer flex items-center gap-1 ${
+              className={`whitespace-nowrap text-[0.9rem] font-medium px-3.5 md:px-4 py-3 border-b-[3px] transition-all bg-transparent cursor-pointer flex items-center gap-2 ${
                 isRiwayatActive
-                  ? "text-white font-semibold border-green-accent"
-                  : "text-white/65 hover:text-white border-transparent"
+                  ? "text-white font-semibold border-[#3dbd84]"
+                  : "text-white/75 hover:text-white border-transparent hover:bg-white/5 rounded-t-lg"
               }`}
             >
-              Riwayat ▾
+              <History className="h-4 w-4" />
+              <span>Riwayat</span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 flex flex-col bg-white rounded-[14px] shadow-[0_15px_35px_rgba(0,0,0,.15)] p-2 min-w-[220px] z-[2000] border-0 text-gray-800 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute top-full left-0 mt-2 flex flex-col bg-white rounded-xl shadow-[0_15px_35px_rgba(0,0,0,.15)] p-2 min-w-[230px] z-[2000] border border-[#e0ece7] text-gray-800 animate-in fade-in zoom-in-95 duration-150">
                 <Link
                   href="/riwayat/temuan"
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block rounded-[8px] px-[14px] py-[10px] text-[0.88rem] font-medium transition-colors no-underline ${
+                  className={`rounded-lg px-3.5 py-2.5 text-[0.85rem] font-medium transition-colors no-underline flex items-center gap-2.5 ${
                     isActive("/riwayat/temuan")
-                      ? "bg-green-dark text-white"
-                      : "text-green-dark hover:bg-green-dark hover:text-white"
+                      ? "bg-[#0d7565] text-white"
+                      : "text-[#1c3833] hover:bg-[#eef7f4] hover:text-[#0d7565]"
                   }`}
                 >
-                  Taruh Barang
+                  <PackagePlus className="h-4 w-4" />
+                  <span>Taruh Barang</span>
                 </Link>
                 <Link
                   href="/riwayat/laporan"
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block rounded-[8px] px-[14px] py-[10px] text-[0.88rem] font-medium transition-colors no-underline ${
+                  className={`rounded-lg px-3.5 py-2.5 text-[0.85rem] font-medium transition-colors no-underline flex items-center gap-2.5 ${
                     isActive("/riwayat/laporan")
-                      ? "bg-green-dark text-white"
-                      : "text-green-dark hover:bg-green-dark hover:text-white"
+                      ? "bg-[#0d7565] text-white"
+                      : "text-[#1c3833] hover:bg-[#eef7f4] hover:text-[#0d7565]"
                   }`}
                 >
-                  Laporan Kehilangan
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>Laporan Kehilangan</span>
                 </Link>
                 <Link
                   href="/riwayat/pengambilan"
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block rounded-[8px] px-[14px] py-[10px] text-[0.88rem] font-medium transition-colors no-underline ${
+                  className={`rounded-lg px-3.5 py-2.5 text-[0.85rem] font-medium transition-colors no-underline flex items-center gap-2.5 ${
                     isActive("/riwayat/pengambilan")
-                      ? "bg-green-dark text-white"
-                      : "text-green-dark hover:bg-green-dark hover:text-white"
+                      ? "bg-[#0d7565] text-white"
+                      : "text-[#1c3833] hover:bg-[#eef7f4] hover:text-[#0d7565]"
                   }`}
                 >
-                  Pengambilan Barang
+                  <PackageCheck className="h-4 w-4" />
+                  <span>Pengambilan Barang</span>
                 </Link>
               </div>
             )}
@@ -114,3 +121,4 @@ export default function NavTabs() {
     </div>
   );
 }
+

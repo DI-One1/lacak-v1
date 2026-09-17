@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import "./globals.css";
 import RouteChrome from "@/components/shared/RouteChrome";
 import RouteFooter from "@/components/shared/RouteFooter";
-import { prisma } from "@/lib/prisma";
 import { ClerkProvider } from "@clerk/nextjs";
 import { syncUserToDatabase } from "@/lib/sync-user";
 
@@ -14,30 +13,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "LACAK - Kehilangan & Temuan SMK TI BAZMA",
+  title: "LACAK - Platform Terintegrasi Lost & Found",
   description:
-    "Platform terintegrasi SMK TI BAZMA",
+    "Sistem Informasi Pengelolaan Barang Hilang & Temuan Terintegrasi",
 };
+
+import { getMasterData } from "@/lib/master-data";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Jalankan sinkronisasi user Clerk ke database PostgreSQL
-  await syncUserToDatabase();
-  const [categories, colors, brands, locations] = await Promise.all([
-    prisma.categoryItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
-    prisma.colorItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
-    prisma.brandItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
-    prisma.locationItem.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
-  ]);
+  // Jalankan sinkronisasi user secara non-blocking di background agar tidak menahan response HTML
+  syncUserToDatabase().catch((err) =>
+    console.error("Background user sync error:", err)
+  );
+
+  const { categories, colors, brands, locations } = await getMasterData();
 
   return (
     <ClerkProvider>
       <html lang="id" suppressHydrationWarning>
         <body
           className={`${inter.className} min-h-screen flex flex-col bg-[#fdfdfd]`}
+          suppressHydrationWarning
         >
           <Suspense
             fallback={

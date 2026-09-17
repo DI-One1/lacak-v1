@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
-import Link from "next/link";
+import { X, Lock, MapPin, Calendar, Tag, Palette, Info, MessageCircle, ArrowRight, ShieldCheck } from "lucide-react";
 import {
   PublicFoundItem,
   getItemTitle,
@@ -55,7 +55,7 @@ export default function ItemDetailModal({
   const imageUrl = getCategoryRepresentativeImage(item.jenis.name);
   const formattedDate = formatIndonesianDate(item.createdAt);
 
-  const userName = user?.fullName || user?.firstName || "Warga BAZMA";
+  const userName = user?.fullName || user?.firstName || "Warga";
   const userEmail =
     user?.primaryEmailAddress?.emailAddress || "email tidak terdata";
 
@@ -73,7 +73,7 @@ export default function ItemDetailModal({
   const waUrl = `https://wa.me/${ADMIN_WA_NUMBER}?text=${waMessage}`;
 
   return (
-    <div className="reference-modal fixed inset-0 z-[1100] flex items-center justify-center overflow-y-auto p-6">
+    <div className="reference-modal fixed inset-0 z-[1100] flex items-center justify-center overflow-y-auto p-4 sm:p-6">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#061814]/65 backdrop-blur-sm transition-opacity"
@@ -86,21 +86,21 @@ export default function ItemDetailModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modalItemName"
-        className="reference-modal-dialog relative z-10 my-auto w-full max-w-[900px] overflow-hidden rounded-[12px] bg-white shadow-[0_24px_70px_rgba(5,31,28,0.3)]"
+        className="reference-modal-dialog relative z-10 my-auto w-full max-w-[900px] overflow-hidden rounded-[16px] bg-white shadow-[0_24px_70px_rgba(5,31,28,0.3)]"
       >
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           aria-label="Tutup detail barang"
-          className="absolute top-3.5 right-3.5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors shadow-sm text-lg"
+          className="absolute top-3.5 right-3.5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors shadow-sm cursor-pointer"
         >
-          ✕
+          <X className="h-5 w-5" />
         </button>
 
         <div className="reference-modal-grid grid md:grid-cols-[1.05fr_1.3fr]">
           {/* Kolom Kiri: Gambar Barang */}
-          <div className="relative min-h-[220px] md:min-h-[460px] bg-gray-100 overflow-hidden">
+          <div className="relative min-h-[240px] md:min-h-[480px] bg-gray-100 overflow-hidden">
             <img
               src={imageUrl}
               alt={title}
@@ -109,16 +109,17 @@ export default function ItemDetailModal({
                 e.currentTarget.src = DEFAULT_ITEM_IMAGE;
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <span className="absolute top-4 left-4 rounded-md bg-[#0a2622]/80 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white border border-white/20">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+            <span className="absolute top-4 left-4 rounded-md bg-[#0a2622]/85 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white border border-white/20">
               {item.jenis.name}
             </span>
             <div className="absolute bottom-4 left-4 right-4 text-white">
-              <span className="text-[11px] opacity-85 block mb-1">
+              <span className="text-[11px] opacity-85 block mb-0.5 font-mono">
                 Kode Barang: {item.businessCode || item.id.slice(0, 8)}
               </span>
-              <p className="text-xs opacity-75">
-                Ditemukan di {item.lokasi.name}
+              <p className="text-xs opacity-80 flex items-center gap-1">
+                <MapPin className="h-3 w-3 text-emerald-300 inline" />
+                <span>Ditemukan di {item.lokasi.name}</span>
               </p>
             </div>
           </div>
@@ -141,8 +142,9 @@ export default function ItemDetailModal({
             {/* Grid Spesifikasi 4 Kotak */}
             <div className="grid grid-cols-2 gap-3 mb-5">
               <div className="rounded-xl border border-[#edf3f1] bg-[#f8faf9] p-3">
-                <span className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
-                  Brand / Merek
+                <span className="flex items-center gap-1 text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
+                  <Tag className="h-3 w-3 text-[#0d7565]" />
+                  <span>Brand / Merek</span>
                 </span>
                 <strong className="text-sm font-semibold text-[#18312d] truncate block">
                   {item.merek.name}
@@ -150,8 +152,9 @@ export default function ItemDetailModal({
               </div>
 
               <div className="rounded-xl border border-[#edf3f1] bg-[#f8faf9] p-3">
-                <span className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
-                  Warna
+                <span className="flex items-center gap-1 text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
+                  <Palette className="h-3 w-3 text-[#0d7565]" />
+                  <span>Warna</span>
                 </span>
                 <strong className="text-sm font-semibold text-[#18312d] truncate block">
                   {item.warna.name}
@@ -159,8 +162,9 @@ export default function ItemDetailModal({
               </div>
 
               <div className="rounded-xl border border-[#edf3f1] bg-[#f8faf9] p-3">
-                <span className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
-                  Lokasi Ditemukan
+                <span className="flex items-center gap-1 text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
+                  <MapPin className="h-3 w-3 text-[#0d7565]" />
+                  <span>Lokasi</span>
                 </span>
                 <strong className="text-sm font-semibold text-[#18312d] truncate block">
                   {item.lokasi.name}
@@ -168,8 +172,9 @@ export default function ItemDetailModal({
               </div>
 
               <div className="rounded-xl border border-[#edf3f1] bg-[#f8faf9] p-3">
-                <span className="block text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
-                  Tanggal Ditemukan
+                <span className="flex items-center gap-1 text-[10px] uppercase font-semibold text-gray-400 mb-0.5">
+                  <Calendar className="h-3 w-3 text-[#0d7565]" />
+                  <span>Tanggal</span>
                 </span>
                 <strong className="text-sm font-semibold text-[#18312d] truncate block">
                   {formattedDate}
@@ -179,8 +184,9 @@ export default function ItemDetailModal({
 
             {/* Keterangan */}
             <div className="mb-5">
-              <span className="block text-[11px] font-semibold text-gray-500 mb-1">
-                Keterangan Tambahan
+              <span className="flex items-center gap-1 text-[11px] font-semibold text-gray-500 mb-1">
+                <Info className="h-3 w-3 text-[#0d7565]" />
+                <span>Keterangan Tambahan</span>
               </span>
               <p className="text-xs leading-relaxed text-gray-600 rounded-lg bg-[#fbfdfc] border border-dashed border-[#e1ece8] p-3">
                 {item.additionalDesc || "Tidak ada keterangan khusus untuk barang ini."}
@@ -188,9 +194,9 @@ export default function ItemDetailModal({
             </div>
 
             {/* Catatan Privasi & Keamanan */}
-            <div className="rounded-lg bg-[#f2f8f6] border border-[#d6ebe5] p-3 mb-6">
+            <div className="rounded-xl bg-[#f2f8f6] border border-[#d6ebe5] p-3 mb-6">
               <p className="text-[11px] text-[#24534a] leading-relaxed flex items-start gap-2">
-                <span className="text-[#0d7565] font-bold text-sm">🔒</span>
+                <Lock className="h-4 w-4 text-[#0d7565] shrink-0 mt-0.5" />
                 <span>
                   Informasi kontak pemilik tidak ditampilkan untuk menjaga
                   privasi. Silakan masuk akun untuk menghubungi admin pengurus
@@ -206,26 +212,29 @@ export default function ItemDetailModal({
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-[#0d594f] px-5 py-3.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#09473f] hover:shadow-lg shadow-[#0d594f]/20 active:scale-[0.99]"
+                  className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-[#0d594f] px-5 py-3.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#09473f] hover:shadow-lg shadow-[#0d594f]/20 active:scale-[0.99] cursor-pointer"
                 >
+                  <MessageCircle className="h-4 w-4 text-emerald-300" />
                   <span>Chat Admin untuk Pengambilan</span>
-                  <span className="text-sm font-bold">→</span>
+                  <ArrowRight className="h-4 w-4" />
                 </a>
               ) : (
                 <div>
                   <button
                     type="button"
                     onClick={() => setShowLoginPrompt(true)}
-                    className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-[#0d594f] px-5 py-3.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#09473f] hover:shadow-lg shadow-[#0d594f]/20 active:scale-[0.99]"
+                    className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-[#0d594f] px-5 py-3.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#09473f] hover:shadow-lg shadow-[#0d594f]/20 active:scale-[0.99] cursor-pointer"
                   >
+                    <MessageCircle className="h-4 w-4 text-emerald-300" />
                     <span>Chat Admin untuk Pengambilan</span>
-                    <span className="text-sm font-bold">→</span>
+                    <ArrowRight className="h-4 w-4" />
                   </button>
 
                   {showLoginPrompt && (
                     <div className="mt-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200 animate-fadeIn">
-                      <p className="text-xs text-amber-800 mb-2 font-medium">
-                        🛡️ Demi keamanan dan mencegah spam, silakan masuk dengan akun Anda terlebih dahulu untuk konfirmasi pengambilan ke admin.
+                      <p className="text-xs text-amber-800 mb-2 font-medium flex items-center gap-1.5">
+                        <ShieldCheck className="h-4 w-4 text-amber-600 shrink-0" />
+                        <span>Demi keamanan dan mencegah spam, silakan masuk dengan akun Anda terlebih dahulu untuk konfirmasi pengambilan ke admin.</span>
                       </p>
                       <SignInButton mode="modal">
                         <button
@@ -246,3 +255,4 @@ export default function ItemDetailModal({
     </div>
   );
 }
+

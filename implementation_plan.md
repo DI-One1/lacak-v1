@@ -1,106 +1,91 @@
-# Rencana Implementasi: Upgrade Halaman Publik LACAK
+# Rencana Peningkatan UI Publik LACAK & Pembentukan Design System Reusable
 
-Dokumen ini merinci langkah-langkah implementasi peningkatan halaman publik `lacak-v1` berdasarkan desain `lacak-public-page-example`, dengan mempertahankan logo asli LACAK, menjaga halaman petugas tetap utuh, mengamankan interaksi WhatsApp via autentikasi Clerk, serta menambahkan fitur Beri Saran terhubung ke Gmail.
-
----
-
-## 1. Lingkup Pekerjaan & Keputusan Desain
-
-1. **Halaman Publik (`/`)**:
-   - Mengadopsi tata letak dari `lacak-public-page-example`:
-     - **Navbar Publik**: Logo LACAK orisinal, Search Bar publik, Filter Bar horizontal (Urutkan, Kategori, Warna, Merek, Lokasi, Reset), dan Menu Dropdown (Masuk/Profil, Tentang Kami, Beri Saran).
-     - **Barang Temuan Terbaru (Ticker)**: Animasi marquee/slider otomatis kartu highlight temuan terbaru.
-     - **Kategori Carousel**: Tombol geser kategori yang memfilter katalog secara instan saat diklik.
-     - **Semua Barang Temuan (Katalog Grid)**: Grid kartu barang yang responsif, badge status & kategori, deskripsi ringkas, lokasi, tanggal, serta pagination.
-     - **Modal Detail Barang**: Popup lengkap dengan foto, metadata (merek, warna, lokasi, tanggal), catatan privasi, dan tombol aksi WhatsApp.
-2. **Proteksi Akses (Auth Guard)**:
-   - **Tamu / Pengunjung Tanpa Login**: Bebas mencari barang, menyaring kategori, dan melihat detail barang (Read-Only).
-   - **Tombol WhatsApp (Chat Admin)**: Wajib login terlebih dahulu. Jika belum login, dialihkan untuk login ke Clerk. Setelah login, pesan WhatsApp otomatis terisi identitas pengguna (*pre-filled* nama, email, dan detail barang) untuk mencegah spam / DDoS.
-   - **Halaman Beri Saran (`/beri-saran`)**: Wajib login agar saran yang masuk memiliki identitas jelas.
-3. **Halaman Petugas (Internal)**:
-   - Halaman `/dashboard`, `/taruh`, `/lapor`, `/ambil`, `/data-warga`, dan `/riwayat` **tidak diubah** fungsinya maupun alurnya. Navbar petugas tetap memakai navigasi operasional yang ada.
-4. **Halaman Tentang Kami (`/tentang-kami`)**:
-   - Konten cerita, tim, visi, dan alur proses dipertahankan sepenuhnya.
-   - Navbar dan footer diselaraskan agar seragam dengan halaman publik utama.
-5. **Pengiriman Saran ke Gmail**:
-   - Terdapat 2 opsi:
-     - **Opsi A (Direct Gmail Web - Mirip WA)**: Membuka compose Gmail dengan draft terisi otomatis ke `lacak.smktibazma@gmail.com` tanpa pihak ketiga.
-     - **Opsi B (Form Otomatis via API)**: Pengguna mengisi form di website, sistem mengirim email ke `lacak.smktibazma@gmail.com` via Nodemailer / Resend dan/atau menyimpan ke database.
+Dokumen ini berisi analisis, rekomendasi arsitektur UI, dan rencana aksi untuk meningkatkan tampilan Halaman Publik **LACAK-V1** agar berstandar profesional, memiliki ciri khas (brand identity), serta tersusun dari komponen yang sepenuhnya *reusable* sebelum nantinya digunakan untuk merombak UI Halaman Petugas.
 
 ---
 
-## 2. Proposed Changes
+## 1. Tanggapan & Analisis Strategi UI
 
-### Komponen Shared & Navigasi
-
-#### [MODIFY] [Navbar.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/shared/Navbar.tsx)
-- Memisahkan tampilan untuk rute publik (`/`, `/tentang-kami`, `/beri-saran`):
-  - Menggunakan logo teks orisinal LACAK.
-  - Menyediakan search bar dan menu burger responsif (Masuk/User Profile, Tentang Kami, Beri Saran).
-  - Khusus halaman beranda (`/`), menampilkan bar filter horizontal (Urutkan, Kategori, Warna, Merek, Lokasi, Reset) yang terhubung ke state katalog.
-- Mempertahankan tampilan navbar petugas untuk rute internal (`/dashboard`, dll.) tanpa perubahan.
-
----
-
-### Halaman Beranda Publik (`/`)
-
-#### [MODIFY] [page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/app/page.tsx)
-- Server component yang mengambil data dari database:
-  - `FoundItem` (status `FOUND`, relasi ke `jenis`, `warna`, `merek`, `lokasi`).
-  - Master data untuk filter: daftar jenis (`CategoryItem`), warna (`ColorItem`), merek (`BrandItem`), dan lokasi (`LocationItem`).
-- Meneruskan data ke client container `PublicPortal`.
-
-#### [NEW] `src/components/public/PublicPortal.tsx`
-- Mengelola state pencarian, filter, pemilihan kategori, paginasi, dan item yang sedang dibuka di modal detail.
-- Menghubungkan filter bar di navbar dengan katalog.
-
-#### [NEW] `src/components/public/LatestItemsTicker.tsx`
-- Menampilkan section *"Barang Temuan Terbaru"* dengan slider/marquee kartu highlight beranimasi halus dan jeda saat hover.
-
-#### [NEW] `src/components/public/CategoryCarousel.tsx`
-- Menampilkan daftar tombol kategori dengan ikon, tombol navigasi geser kiri/kanan, dan status aktif.
-
-#### [NEW] `src/components/public/CatalogGrid.tsx`
-- Menampilkan grid kartu barang temuan, indikator hasil, empty state jika pencarian nihil, dan navigasi halaman (pagination).
-
-#### [NEW] `src/components/public/ItemDetailModal.tsx`
-- Modal dialog detail barang temuan.
-- Dilengkapi tombol *"Chat Admin untuk Pengambilan"*:
-  - Cek status login Clerk.
-  - Jika belum login: memunculkan dialog/ajakan login.
-  - Jika sudah login: membuka link `https://wa.me/...` dengan teks identitas terisi otomatis.
+### 💡 Mengapa Keputusan Anda Sangat Tepat?
+1. **Konsistensi UI adalah Standar Aplikasi Profesional (Enterprise-grade)**: 
+   Dalam dunia industri software modern, aplikasi tidak boleh memiliki "kepribadian ganda" di mana UI publik dan UI internal/petugas saling bertolak belakang. Konsistensi visual (warna, tipografi, bentuk button, card, modal, dan ikon) menciptakan rasa percaya (*trust*) dan kemudahan penggunaan (*usability*).
+2. **Halaman Publik Sebagai Anchor (Wajah Utama)**: 
+   Memilih UI Publik sebagai acuan utama adalah langkah terbaik karena Halaman Publik adalah *first impression* bagi pengguna/warga BAZMA. 
+3. **Efisiensi Pengembangan melalui Reusable UI Components**: 
+   Dengan membenahkan UI Publik terlebih dahulu hingga memiliki *Design System* (Komponen Reusable), perombakan UI Petugas di fase berikutnya akan menjadi jauh lebih cepat dan rapi karena Petugas tinggal meng-import komponen UI yang sudah teruji di Halaman Publik.
 
 ---
 
-### Halaman Beri Saran (`/beri-saran`)
+## 2. Hasil Analisis Kelemahan UI Publik Saat Ini & Area Perbaikan
 
-#### [NEW] `src/app/beri-saran/page.tsx`
-- Halaman formulir masukan/saran publik.
-- Memeriksa status login (jika belum login, tampilkan banner ajakan masuk dengan tombol Login Clerk).
-- Menyediakan pengiriman saran ke Gmail admin.
-
----
-
-### Penyelarasan Halaman Tentang Kami (`/tentang-kami`)
-
-#### [MODIFY] [tentang-kami/page.tsx](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/app/tentang-kami/page.tsx)
-- Menyelaraskan footer dan padding atas agar pas dengan navbar publik baru.
+| Area UI | Kondisi Saat Ini | Masalah / Kekurangan | Solusi & Peningkatan |
+|---|---|---|---|
+| **Ikon Kategori** | Menggunakan Emoji bawaan OS (`🎧`, `💻`, `🎒`, `🧥`, `🌧️`) | • Tampilan tidak konsisten di Windows, Android, iOS, macOS.<br>• Terkesan kasual/informal dan kurang berwibawa.<br>• Tidak memiliki ciri khas warna brand LACAK. | Mengganti seluruh emoji dengan set **Vector Icons (`lucide-react`)** yang dikustomisasi dengan aksen warna brand LACAK (Teal/Emerald `#0d7565`). Ikon tajam, seragam, retina-ready, & berkesan modern. |
+| **Komponen UI** | Komponen UI tersebar dan di-style ad-hoc di masing-masing file | • Kode styling berulang di beberapa tempat.<br>• Sulit di-reuse ke Halaman Petugas secara langsung. | Membangun **Atomic UI Component Library** di `src/components/ui/` (`Button`, `Badge`, `Card`, `CategoryPill`, `Modal`, `Input`, `Select`, `EmptyState`, `SkeletonLoader`). |
+| **Identity & Visual Polish** | Penggunaan warna & shadow belum sepenuhnya terstruktur | • Belum ada token warna & mikro-interaksi yang seragam.<br>• Aksen brand LACAK belum terpancar kuat. | Menyusun *Design Tokens* untuk warna Teal LACAK (`#0d7565`, `#158a76`, `#064e43`, `#eaf6f2`), border-radius (rounded-xl/2xl), glassmorphism, dan efek hover lift yang responsif. |
+| **Card Barang & Grid** | Card item menggunakan layout standar | • Badging status & lokasi masih terpisah style-nya.<br>• Image loading belum ada skeleton loader. | Redesign **Item Card** dengan badge status (Tersedia / Diambil) bernuansa modern, hover-zoom image, dan skeleton loading yang mulus. |
+| **Carousel Kategori** | Scroll manual standar | • Tampilan card kategori belum mencolok secara visual.<br>• Ikon emoji terlihat tenggelam. | Menjadikan `CategoryCarousel` lebih *high-end* dengan ikon Lucide yang memiliki latar lingkaran bergradasi teal, indikator aktif bernyawa, dan hover elevation. |
+| **Navbar & Search Hero** | Navigasi & filter dropdown bawaan HTML `<select>` | • Dropdown `<select>` bawaan browser terlihat kaku.<br>• Filter bar terasa belum seirama dengan banner. | Merapikan `PublicNavbar` & `PublicSearchPortal` dengan visual pill yang sleek, responsive drawer pada mobile, dan animasi filter reset. |
 
 ---
 
-## 3. Rencana Verifikasi
+## 3. Rencana Rinci Peningkatan UI Publik (Fase 1)
+
+### Component Architecture
+```mermaid
+graph TD
+    SubApp[App Pages: Home, Pencarian, Tentang Kami, Beri Saran] --> PublicComponents[Public Page Components]
+    PublicComponents --> CategoryCarousel[CategoryCarousel]
+    PublicComponents --> CatalogGrid[CatalogGrid]
+    PublicComponents --> SearchPortal[PublicSearchPortal]
+    PublicComponents --> ItemModal[ItemDetailModal]
+    
+    CategoryCarousel --> DesignSystem[Shared UI Design System]
+    CatalogGrid --> DesignSystem
+    SearchPortal --> DesignSystem
+    ItemModal --> DesignSystem
+    
+    DesignSystem --> UIIcons[Lucide Vector Icons System]
+    DesignSystem --> UIBadge[Badge & Pill Component]
+    DesignSystem --> UIButton[Button Component]
+    DesignSystem --> UICard[ItemCard Component]
+    DesignSystem --> UISkeleton[Skeleton Component]
+    DesignSystem --> UIEmpty[EmptyState Component]
+```
+
+### Proposed Changes
+
+#### [NEW] Dependency & Icons Setup
+- Installing `lucide-react` untuk menyediakan ratusan ikon vektor berkualitas tinggi yang dapat disesuaikan warnanya dengan stroke presisi.
+
+#### [NEW] Design System Components (`src/components/ui/`)
+- **[NEW] [`CategoryIcon.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/ui/CategoryIcon.tsx)**: Pemetaan nama kategori ke ikon Lucide SVG profesional (`Headphones`, `Laptop`, `Smartphone`, `Briefcase`, `Key`, `Watch`, `Shirt`, `Glasses`, `BookOpen`, `Package`, dll.) lengkap dengan opsi size dan styling.
+- **[NEW] [`Badge.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/ui/Badge.tsx)**: Komponen badge status (Tersedia, Diambil, Diproses) dan badge kategori yang konsisten.
+- **[NEW] [`Button.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/ui/Button.tsx)**: Komponen tombol standar dengan varian primary, secondary, outline, ghost, serta dukungan ikon & loading spinner.
+- **[NEW] [`ItemCard.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/ui/ItemCard.tsx)**: Card barang temuan yang dipisahkan dari `CatalogGrid` agar bisa di-reuse di mana saja (termasuk di Halaman Petugas).
+- **[NEW] [`SkeletonItem.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/ui/SkeletonItem.tsx)**: Component skeleton loading saat data sedang dimuat.
+
+#### [MODIFY] Public Components & Pages
+- **[MODIFY] [`public-utils.ts`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/public-utils.ts)**: Memperbarui fungsi `getCategoryIcon` untuk mengembalikan nama ikon Lucide atau komponen ikon vektor alih-alih emoji string.
+- **[MODIFY] [`CategoryCarousel.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/CategoryCarousel.tsx)**: Mengganti tampilan emoji dengan `CategoryIcon` SVG vector, mempercantik kartu kategori dengan hover glow Teal, indikator aktif ring 2px, dan navigasi panah yang lebih mulus.
+- **[MODIFY] [`CatalogGrid.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/CatalogGrid.tsx)**: Menggunakan `ItemCard` reusable, mempercantik tampilan pagination, dan mempoles empty state jika tidak ada barang yang ditemukan.
+- **[MODIFY] [`PublicSearchPortal.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/PublicSearchPortal.tsx)** & **[`PublicNavbar.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/PublicNavbar.tsx)**: Penyempurnaan styling bar pencarian, penyesuaian dropdown filter, serta pembaruan ikon tombol action.
+- **[MODIFY] [`ItemDetailModal.tsx`](file:///c:/Users/pcbaz/Desktop/Muhammad-Choerul-Akbar/MAPEL/SAAS/Kelas%2012/Praktik/lacak-project/lacak-v1/src/components/public/ItemDetailModal.tsx)**: Mempercantik modal detail barang publik dengan badge baru, tombol klaim/kontak petugas yang tegas, dan visual image viewer yang jernih.
+
+---
+
+## 4. Roadmap Penyelarasan Halaman Petugas (Fase 2 - Mendatang)
+
+Setelah UI Publik 100% matang, profesional, dan reusable:
+1. **Dashboard Petugas (`/dashboard`)**: Mengadopsi palet warna Teal & komponen `Card`, `Badge`, `Button` dari Design System Publik.
+2. **Tabel Manajemen Barang (`/data-warga`, `/taruh`, `/ambil`, `/riwayat`)**: Menggunakan `CategoryIcon` dan `Badge` yang persis sama dengan Halaman Publik sehingga tidak ada disonansi visual saat petugas bekerja.
+3. **Form Lapor & Penyerahan**: Menggunakan komponen input & modal dari UI Publik.
+
+---
+
+## 5. Verification Plan
 
 ### Manual Verification
-1. **Navigasi Publik vs Petugas**:
-   - Buka `/` dan `/tentang-kami` sebagai tamu -> pastikan navbar publik muncul dengan logo LACAK, search bar, dropdown menu, dan filter.
-   - Buka `/dashboard` sebagai akun admin (`lacak.smktibazma@gmail.com`) -> pastikan navigasi petugas, form lapor, taruh, ambil, dan riwayat berjalan normal tanpa gangguan.
-2. **Filter & Pencarian Real-Time**:
-   - Ketik kata kunci di kolom cari -> pastikan barang langsung terfilter.
-   - Klik salah satu kategori (misal: "Jaket" atau "Elektronik") -> pastikan grid barang tersaring sesuai kategori.
-   - Pilih filter warna/lokasi/merek -> pastikan kombinasi filter bekerja.
-   - Klik tombol "Reset Filter" -> kembali ke kondisi awal.
-3. **Pengujian Modal & Proteksi WhatsApp**:
-   - Klik kartu barang tanpa login -> modal terbuka -> klik tombol "Chat Admin" -> muncul ajakan login.
-   - Login dengan akun biasa -> klik tombol "Chat Admin" -> WhatsApp terbuka dengan format pesan berisi identitas user dan ID barang.
-4. **Pengujian Halaman Beri Saran**:
-   - Buka `/beri-saran` -> coba kirim saran ke Gmail admin.
+- Melakukan verifikasi visual di browser (menggunakan browser subagent atau preview local dev) pada Halaman Publik (`/`, `/pencarian`, `/tentang-kami`, `/beri-saran`).
+- Memastikan semua kategori di `CategoryCarousel` tampil dengan ikon Lucide SVG yang presisi (tidak ada emoji yang tersisa).
+- Menguji interaksi filter (pencarian, pilih kategori, reset filter, klik detail item modal) untuk memastikan performa dan transisi berjalan mulus.

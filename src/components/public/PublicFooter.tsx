@@ -31,7 +31,7 @@ export default function PublicFooter() {
         {/* Copyright */}
         <div className="pt-2 border-t border-[#f0f5f3] w-full max-w-md">
           <p className="text-[11px] text-[#718580]">
-            © 2026 LACAK — SMK TI BAZMA Boarding School. Hak Cipta Dilindungi.
+            © 2026 LACAK — Platform Terintegrasi Lost &amp; Found. Hak Cipta Dilindungi.
           </p>
         </div>
       </div>

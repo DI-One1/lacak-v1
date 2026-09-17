@@ -14,6 +14,8 @@ import WargaRow from "./WargaRow";
 import WargaProfileModal from "./WargaProfileModal";
 import WargaActivityModal from "./WargaActivityModal";
 
+import { Users, UserPlus, Trash2 } from "lucide-react";
+
 // UI primitives
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -174,7 +176,16 @@ export default function WargaClient({ initialData }: { initialData: Warga[] }) {
 
   return (
     <div className="container mx-auto px-4 py-8 relative min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-green-dark">Data Warga</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-[#0d7565] flex items-center gap-2.5">
+          <Users className="h-6 w-6 text-[#0d7565]" />
+          <span>Data Warga BAZMA</span>
+        </h1>
+
+        <span className="text-xs font-semibold text-[#57706a] bg-[#eef7f4] px-3 py-1.5 rounded-full border border-[#d6e5df]">
+          {filteredData.length} warga terdaftar
+        </span>
+      </div>
 
       <div className="mb-24">
         <Table headers={["NIS / ID", "Nama", "Peran", "Keterangan Peran", "Aksi"]}>
@@ -201,42 +212,22 @@ export default function WargaClient({ initialData }: { initialData: Warga[] }) {
       </div>
 
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-8 right-8 z-[1000] flex flex-col gap-4">
+      <div className="fixed bottom-8 right-8 z-[1000] flex flex-col gap-3">
         {dataWarga.length > 0 && (
           <button
             onClick={handleHapusSemua}
             title="Hapus Semua Data Warga"
-            className="flex items-center justify-center w-14 h-14 bg-red-500 text-white rounded-full shadow-xl hover:bg-red-600 hover:scale-110 transition-all duration-300 cursor-pointer border-none outline-none"
+            className="flex items-center justify-center w-12 h-12 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 hover:scale-105 transition-all duration-200 cursor-pointer border-none outline-none"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-            >
-              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-              <path
-                fillRule="evenodd"
-                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-              />
-            </svg>
+            <Trash2 className="h-5 w-5" />
           </button>
         )}
         <button
           onClick={() => setIsModalOpen(true)}
           title="Tambah Warga Baru"
-          className="flex items-center justify-center w-14 h-14 bg-green-dark text-white rounded-full shadow-xl hover:bg-green-mid hover:scale-110 transition-all duration-300 cursor-pointer border-none outline-none"
+          className="flex items-center justify-center w-14 h-14 bg-[#0d7565] text-white rounded-full shadow-xl hover:bg-[#0a5d50] hover:scale-105 transition-all duration-200 cursor-pointer border-none outline-none"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-          </svg>
+          <UserPlus className="h-6 w-6" />
         </button>
       </div>
 

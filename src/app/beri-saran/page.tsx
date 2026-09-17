@@ -13,7 +13,7 @@ export default function BeriSaranPage() {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const userName = user?.fullName || user?.firstName || "Warga BAZMA";
+  const userName = user?.fullName || user?.firstName || "Warga";
   const userEmail =
     user?.primaryEmailAddress?.emailAddress || "email tidak terdata";
 
@@ -23,7 +23,7 @@ export default function BeriSaranPage() {
 
     const emailSubject = `[SARAN LACAK] ${topic} - dari ${userName}`;
     const emailBody =
-      `Halo Tim Pengelola LACAK SMK TI BAZMA,\n\n` +
+      `Halo Tim Pengelola LACAK,\n\n` +
       `Saya ingin menyampaikan masukan/saran untuk sistem Lost & Found:\n\n` +
       `👤 Nama Pengirim: ${userName}\n` +
       `📧 Email: ${userEmail}\n` +
@@ -66,7 +66,7 @@ export default function BeriSaranPage() {
             Punya saran untuk Lacak?
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-            Bantu kami membuat sistem Lost & Found SMK TI BAZMA menjadi lebih baik,
+            Bantu kami membuat sistem Lost &amp; Found menjadi lebih baik,
             cepat, dan nyaman digunakan bersama.
           </p>
         </div>

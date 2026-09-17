@@ -1,5 +1,6 @@
 "use client";
 
+import { Sparkles, ArrowRight } from "lucide-react";
 import {
   PublicFoundItem,
   getItemTitle,
@@ -28,18 +29,19 @@ export default function LatestItemsTicker({
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="inline-block h-[18px] w-[3.5px] rounded-[2px] bg-[#158a76]" />
-          <h2 className="text-[17px] font-bold text-[#101b1b]">
-            Barang Temuan Terbaru
+          <h2 className="text-[17px] font-bold text-[#101b1b] flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-[#0d7565]" />
+            <span>Barang Temuan Terbaru</span>
           </h2>
         </div>
 
         <button
           type="button"
           onClick={onScrollToCatalog}
-          className="flex items-center gap-1.5 text-[11px] font-semibold text-[#0c5c52] transition-colors hover:text-[#158a76] hover:underline"
+          className="flex items-center gap-1.5 text-[11.5px] font-semibold text-[#0c5c52] transition-colors hover:text-[#158a76] hover:underline cursor-pointer"
         >
           <span>Lihat Semua</span>
-          <span>→</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
