@@ -22,7 +22,7 @@ export default async function RiwayatTemuanPage() {
       {/* Header & Navigasi */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <Link href="/" className="text-sm text-gray-500 hover:text-[#3dbd84] flex items-center gap-2 w-fit mb-2 transition-colors">
+          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-[#3dbd84] flex items-center gap-2 w-fit mb-2 transition-colors">
             <span>&larr;</span> Kembali ke Beranda
           </Link>
           <h1 className="text-3xl font-extrabold text-[#0d3b2e]">Riwayat Barang Temuan</h1>
