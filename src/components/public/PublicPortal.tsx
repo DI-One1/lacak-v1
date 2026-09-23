@@ -165,7 +165,7 @@ export default function PublicPortal({
   };
 
   return (
-    <div className="public-portal w-full flex flex-col">
+    <div className="public-portal w-full flex flex-col pt-6 sm:pt-8">
       {/* ==================== SECTION 1: BARANG TERBARU (TICKER) ==================== */}
       <LatestItemsTicker
         items={initialItems.slice(0, 4)}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState, useEffect, useRef } from "react";
+import { FormEvent, useState, useEffect, useRef, useMemo } from "react";
 import { useClerk, useUser, SignInButton } from "@clerk/nextjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -50,6 +50,28 @@ export default function PublicNavbar({
     selectedBrand: searchParams.get("brand") || "all",
     selectedLocation: searchParams.get("location") || "all",
   }));
+
+  // Count active filters (excluding search query and default sort)
+  const activeFilterCount = useMemo(() => {
+    return [
+      filters.selectedSort !== "newest",
+      filters.selectedCategory !== "all",
+      filters.selectedColor !== "all",
+      filters.selectedBrand !== "all",
+      filters.selectedLocation !== "all",
+    ].filter(Boolean).length;
+  }, [filters]);
+
+  // Filter panel: auto-open if there are active filters from URL, otherwise closed
+  const [filtersOpen, setFiltersOpen] = useState(() => {
+    const hasActiveFromUrl =
+      searchParams.has("sort") ||
+      searchParams.has("category") ||
+      searchParams.has("color") ||
+      searchParams.has("brand") ||
+      searchParams.has("location");
+    return hasActiveFromUrl;
+  });
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -127,9 +149,9 @@ export default function PublicNavbar({
   return (
     <header className="public-navbar">
       <div className="public-nav-inner">
-        {/* Main Nav Row: Brand | Desktop Search | Actions / Profile */}
+        {/* Main Nav Row: Brand | Desktop Search + Filter Toggle | Profile */}
         <div className="public-nav-main">
-          {/* Brand Logo matching Petugas exact font and style */}
+          {/* Brand Logo */}
           <Link
             href="/"
             className="text-2xl font-bold text-green-dark tracking-wide hover:opacity-90 transition-opacity select-none shrink-0"
@@ -137,58 +159,49 @@ export default function PublicNavbar({
             LACAK
           </Link>
 
-          {/* Desktop Search Bar (Hidden on mobile/tablet, shown on lg+) */}
-          <form className="public-nav-search public-search-desktop" onSubmit={handleSearch} role="search">
-            <svg
-              className="w-4 h-4 text-[#0d7565] shrink-0 ml-3.5 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              aria-hidden="true"
+          {/* Desktop Search Bar + Filter Toggle (Hidden on mobile/tablet, shown on lg+) */}
+          <div className="hidden lg:flex items-center gap-2.5 flex-1">
+            <form className="public-nav-search flex flex-1" onSubmit={handleSearch} role="search">
+              <svg
+                className="w-4 h-4 text-[#0d7565] shrink-0 ml-3.5 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.2}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="search"
+                value={filters.searchQuery}
+                onChange={(event) => updateFilter("searchQuery", event.target.value)}
+                placeholder="Cari barang, merek, atau kategori..."
+                aria-label="Cari barang, merek, atau kategori"
+              />
+              <button type="submit" aria-label="Cari barang" className="sr-only">Cari</button>
+            </form>
+
+            {/* Filter Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+              className={`public-filter-toggle ${activeFilterCount > 0 ? "filter-active" : ""}`}
+              aria-expanded={filtersOpen}
+              aria-label="Toggle filter barang"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="search"
-              value={filters.searchQuery}
-              onChange={(event) => updateFilter("searchQuery", event.target.value)}
-              placeholder="Cari barang, merek, atau kategori..."
-              aria-label="Cari barang, merek, atau kategori"
-            />
-            <button type="submit" aria-label="Cari barang" className="sr-only">Cari</button>
-          </form>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              <span>Filter</span>
+              {activeFilterCount > 0 && (
+                <span className="filter-badge">{activeFilterCount}</span>
+              )}
+            </button>
+          </div>
 
-          {/* Desktop Navigation Links + Profile / Masuk (Hidden on mobile, shown on lg+) */}
+          {/* Desktop Profile / Masuk (Hidden on mobile, shown on lg+) */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
-            <nav className="flex items-center gap-1.5">
-              <Link
-                href="/tentang-kami"
-                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === "/tentang-kami"
-                    ? "text-green-dark bg-[#eef7f4]"
-                    : "text-[#4b6660] hover:text-green-dark hover:bg-[#f1f7f5]"
-                }`}
-              >
-                Tentang Kami
-              </Link>
-
-              <Link
-                href="/beri-saran"
-                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === "/beri-saran"
-                    ? "text-green-dark bg-[#eef7f4]"
-                    : "text-[#4b6660] hover:text-green-dark hover:bg-[#f1f7f5]"
-                }`}
-              >
-                Beri Saran
-              </Link>
-
-
-              <div className="h-4 w-px bg-[#dce7e3] mx-1" />
-            </nav>
-
-            {/* Desktop User Profile / Masuk */}
             {!isLoaded ? (
               <div className="w-24 h-8 rounded-full bg-slate-100 animate-pulse" />
             ) : isSignedIn ? (
@@ -225,9 +238,10 @@ export default function PublicNavbar({
                   </svg>
                 </button>
 
-                {/* Profile Dropdown */}
+                {/* Desktop Profile Dropdown */}
                 {profileOpen && (
                   <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-[#dbe8e3] bg-white p-2 shadow-lg z-50 animate-fadeIn text-left">
+                    {/* Header: Nama & Email */}
                     <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[#f6faf8] mb-1.5 border border-[#e8f2ee]">
                       {user?.imageUrl ? (
                         <img
@@ -255,6 +269,7 @@ export default function PublicNavbar({
                       </div>
                     </div>
 
+                    {/* Menu Utama */}
                     <div className="space-y-0.5 text-xs font-medium text-[#203c37]">
                       {isPetugas && (
                         <Link
@@ -284,8 +299,44 @@ export default function PublicNavbar({
                         <span>Kelola Profil Akun</span>
                       </button>
 
+                      {/* Separator */}
                       <div className="my-1 border-t border-[#edf4f1]" />
 
+                      {/* Menu Informasi (Dipindahkan dari Header) */}
+                      <Link
+                        href="/tentang-kami"
+                        onClick={() => setProfileOpen(false)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                          pathname === "/tentang-kami"
+                            ? "text-green-dark bg-[#eef7f4] font-semibold"
+                            : "hover:bg-[#f1f7f5] hover:text-green-dark"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 text-[#5f7d77]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Tentang Kami</span>
+                      </Link>
+
+                      <Link
+                        href="/beri-saran"
+                        onClick={() => setProfileOpen(false)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                          pathname === "/beri-saran"
+                            ? "text-green-dark bg-[#eef7f4] font-semibold"
+                            : "hover:bg-[#f1f7f5] hover:text-green-dark"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 text-[#5f7d77]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Beri Saran</span>
+                      </Link>
+
+                      {/* Separator */}
+                      <div className="my-1 border-t border-[#edf4f1]" />
+
+                      {/* Aksi: Logout */}
                       <button
                         type="button"
                         onClick={() => {
@@ -304,22 +355,107 @@ export default function PublicNavbar({
                 )}
               </div>
             ) : (
-              <SignInButton mode="modal">
+              /* Guest: Hamburger Menu with Masuk, Tentang Kami & Beri Saran in dropdown */
+              <div className="relative" ref={profileRef}>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-dark hover:bg-[#164e3e] text-white text-xs font-semibold shadow-xs transition-colors shrink-0 cursor-pointer"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className={`flex items-center justify-center w-9 h-9 rounded-lg border transition-all cursor-pointer ${
+                    profileOpen
+                      ? "border-green-dark bg-green-dark text-white shadow-md"
+                      : "border-[#d6e5df] bg-white text-[#4b6660] hover:border-green-dark/40 hover:bg-[#f6fbf9] hover:text-green-dark"
+                  }`}
+                  aria-expanded={profileOpen}
+                  aria-label="Menu navigasi"
                 >
-                  <svg className="w-3.5 h-3.5 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  <span>Masuk</span>
+                  {profileOpen ? (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  )}
                 </button>
-              </SignInButton>
+
+                {/* Guest Desktop Dropdown Menu */}
+                {profileOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-[#dbe8e3] bg-white p-2 shadow-lg z-50 animate-fadeIn text-left">
+                    {/* Primary Action: Masuk / Login */}
+                    <SignInButton mode="modal">
+                      <button
+                        type="button"
+                        onClick={() => setProfileOpen(false)}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-green-dark hover:bg-[#164e3e] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                      >
+                        <svg className="w-4 h-4 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Masuk / Login</span>
+                      </button>
+                    </SignInButton>
+
+                    {/* Separator */}
+                    <div className="my-1.5 border-t border-[#edf4f1]" />
+
+                    {/* Info Links */}
+                    <div className="space-y-0.5 text-xs font-medium text-[#203c37]">
+                      <Link
+                        href="/tentang-kami"
+                        onClick={() => setProfileOpen(false)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                          pathname === "/tentang-kami"
+                            ? "text-green-dark bg-[#eef7f4] font-semibold"
+                            : "hover:bg-[#f1f7f5] hover:text-green-dark"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 text-[#5f7d77]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Tentang Kami</span>
+                      </Link>
+
+                      <Link
+                        href="/beri-saran"
+                        onClick={() => setProfileOpen(false)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                          pathname === "/beri-saran"
+                            ? "text-green-dark bg-[#eef7f4] font-semibold"
+                            : "hover:bg-[#f1f7f5] hover:text-green-dark"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 text-[#5f7d77]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Beri Saran</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
-          {/* Mobile Top Controls: Masuk / Profile + Hamburger (Hidden on lg+) */}
+          {/* Mobile Top Controls: Masuk / Profile + Filter Toggle + Hamburger (Hidden on lg+) */}
           <div className="flex lg:hidden items-center gap-2" ref={mobileMenuRef}>
+            {/* Mobile Filter Toggle */}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+              className={`public-filter-toggle ${activeFilterCount > 0 ? "filter-active" : ""}`}
+              aria-expanded={filtersOpen}
+              aria-label="Toggle filter barang"
+              style={{ height: 34, padding: "0 10px", fontSize: "11px" }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              {activeFilterCount > 0 && (
+                <span className="filter-badge" style={{ minWidth: 16, height: 16, fontSize: "9px" }}>{activeFilterCount}</span>
+              )}
+            </button>
+
             {/* If signed in: Sleek avatar button that opens drawer */}
             {isLoaded && isSignedIn && (
               <button
@@ -484,6 +620,11 @@ export default function PublicNavbar({
                   </svg>
                 </Link>
               )}
+
+              {/* Separator before info links */}
+              <div className="my-1.5 border-t border-[#edf4f1]" />
+
+              {/* Menu Informasi (Dipindahkan dari Header) */}
               <Link
                 href="/tentang-kami"
                 onClick={() => setMobileMenuOpen(false)}
@@ -524,7 +665,6 @@ export default function PublicNavbar({
                 </svg>
               </Link>
 
-
               {isLoaded && !isSignedIn && (
                 <div className="pt-2">
                   <SignInButton mode="modal">
@@ -545,35 +685,38 @@ export default function PublicNavbar({
           </div>
         )}
 
-        <section className="public-filters" aria-label="Filter barang">
-          <PublicFilter label="Urutkan" value={filters.selectedSort} onChange={(value) => updateFilter("selectedSort", value as PublicFilterState["selectedSort"])}>
-            <option value="newest">Terbaru</option>
-            <option value="oldest">Terlama</option>
-            <option value="name">Nama A-Z</option>
-          </PublicFilter>
-          <PublicFilter label="Kategori" value={filters.selectedCategory} onChange={(value) => updateFilter("selectedCategory", value)}>
-            <option value="all">Semua Kategori</option>
-            {categories.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-          </PublicFilter>
-          <PublicFilter label="Warna" value={filters.selectedColor} onChange={(value) => updateFilter("selectedColor", value)}>
-            <option value="all">Semua Warna</option>
-            {colors.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-          </PublicFilter>
-          <PublicFilter label="Merek" value={filters.selectedBrand} onChange={(value) => updateFilter("selectedBrand", value)}>
-            <option value="all">Semua Merek</option>
-            {brands.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-          </PublicFilter>
-          <PublicFilter label="Lokasi" value={filters.selectedLocation} onChange={(value) => updateFilter("selectedLocation", value)}>
-            <option value="all">Semua Lokasi</option>
-            {locations.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
-          </PublicFilter>
-          <button className="public-reset group" type="button" onClick={resetFilters} title="Reset semua filter">
-            <svg className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span>Reset</span>
-          </button>
-        </section>
+        {/* Collapsible Filter Panel */}
+        {filtersOpen && (
+          <section className="public-filters public-filters-animated" aria-label="Filter barang">
+            <PublicFilter label="Urutkan" value={filters.selectedSort} onChange={(value) => updateFilter("selectedSort", value as PublicFilterState["selectedSort"])}>
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="name">Nama A-Z</option>
+            </PublicFilter>
+            <PublicFilter label="Kategori" value={filters.selectedCategory} onChange={(value) => updateFilter("selectedCategory", value)}>
+              <option value="all">Semua Kategori</option>
+              {categories.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+            </PublicFilter>
+            <PublicFilter label="Warna" value={filters.selectedColor} onChange={(value) => updateFilter("selectedColor", value)}>
+              <option value="all">Semua Warna</option>
+              {colors.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+            </PublicFilter>
+            <PublicFilter label="Merek" value={filters.selectedBrand} onChange={(value) => updateFilter("selectedBrand", value)}>
+              <option value="all">Semua Merek</option>
+              {brands.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+            </PublicFilter>
+            <PublicFilter label="Lokasi" value={filters.selectedLocation} onChange={(value) => updateFilter("selectedLocation", value)}>
+              <option value="all">Semua Lokasi</option>
+              {locations.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+            </PublicFilter>
+            <button className="public-reset group" type="button" onClick={resetFilters} title="Reset semua filter">
+              <svg className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Reset</span>
+            </button>
+          </section>
+        )}
       </div>
     </header>
   );

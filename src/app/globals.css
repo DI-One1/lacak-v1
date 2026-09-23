@@ -207,6 +207,93 @@ body.modal-open {
   border: 0;
 }
 
+/* ── Filter Toggle Button ── */
+.public-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid #d4e8e1;
+  border-radius: 10px;
+  background: #f4faf8;
+  color: #4b6660;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.public-filter-toggle:hover {
+  border-color: #0d7565;
+  color: #0d7565;
+  background: #eef7f4;
+}
+
+.public-filter-toggle[aria-expanded="true"],
+.public-filter-toggle.filter-active {
+  border-color: #0d7565;
+  background: #0d3b2e;
+  color: #fff;
+}
+
+.public-filter-toggle[aria-expanded="true"]:hover,
+.public-filter-toggle.filter-active:hover {
+  background: #164e3e;
+}
+
+.public-filter-toggle .filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #3dbd84;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.public-filter-toggle[aria-expanded="true"] .filter-badge,
+.public-filter-toggle.filter-active .filter-badge {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Filter Slide Animation ── */
+@keyframes filterSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    max-height: 600px;
+    transform: translateY(0);
+  }
+}
+
+.public-filters-animated {
+  animation: filterSlideDown 0.25s ease-out both;
+  overflow: hidden;
+}
+
+/* ── Dropdown FadeIn ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out both;
+}
+
 .public-filters {
   display: flex;
   align-items: flex-end;
@@ -260,7 +347,7 @@ body.modal-open {
   border-color: #0d7565;
   color: #0d7565;
 }
-.public-portal { overflow-x: clip; background: #fff; color: #101b1b; }
+.public-portal { overflow-x: clip; background: #fff; color: #101b1b; padding-top: 24px; }
 .public-page-panel { color: #101b1b; }
 .public-about {
   display: grid;
@@ -323,14 +410,15 @@ body.modal-open {
 
 @media (max-width: 1023px) {
   .public-nav-inner { padding: 10px 14px 8px; }
-  .public-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .public-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: flex-end; }
+  .public-reset { width: 100%; }
 }
 
 @media (max-width: 640px) {
   .public-navbar { position: relative; }
   .public-nav-inner { padding: 10px 12px 8px; }
-  .public-filters { grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 10px 10px; }
-  .public-reset { grid-column: 1 / -1; width: 100%; }
+  .public-filters { grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 10px 10px; align-items: flex-end; }
+  .public-reset { width: 100%; }
   .public-portal #semua > .all-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .public-portal .highlight-card { width: 78vw; flex-basis: 78vw; height: 230px; }
   .reference-modal { align-items: end; padding: 0; }
