@@ -65,8 +65,7 @@ export default function ItemDetailModal({
       `📦 *${title}*\n` +
       `🏷️ Kategori: ${item.jenis.name}\n` +
       `🎨 Warna: ${item.warna.name}\n` +
-      `📍 Lokasi Ditemukan: ${item.lokasi.name}\n` +
-      `🔑 Kode Barang: ${item.businessCode || item.id.slice(0, 8)}\n\n` +
+      `📍 Lokasi Ditemukan: ${item.lokasi.name}\n\n` +
       `Mohon petunjuk untuk proses verifikasi dan pengambilan barang. Terima kasih!`
   );
 
@@ -114,11 +113,8 @@ export default function ItemDetailModal({
               {item.jenis.name}
             </span>
             <div className="absolute bottom-4 left-4 right-4 text-white">
-              <span className="text-[11px] opacity-85 block mb-0.5 font-mono">
-                Kode Barang: {item.businessCode || item.id.slice(0, 8)}
-              </span>
-              <p className="text-xs opacity-80 flex items-center gap-1">
-                <MapPin className="h-3 w-3 text-emerald-300 inline" />
+              <p className="text-xs opacity-90 flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5 text-emerald-300 inline" />
                 <span>Ditemukan di {item.lokasi.name}</span>
               </p>
             </div>
