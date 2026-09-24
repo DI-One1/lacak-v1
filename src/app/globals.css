@@ -106,10 +106,17 @@ body.modal-open {
   display: flex;
   width: max-content;
   gap: 1.125rem;
-  animation: latestSlide 34s linear infinite;
+  animation: latestSlide 38s linear infinite;
+  padding-top: 14px;
+  padding-bottom: 18px;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
-.latest-marquee-wrap:hover .latest-marquee {
+/* Marquee hover pause */
+.cards-wrap:hover .latest-marquee,
+.latest-marquee-wrap:hover .latest-marquee,
+.latest-marquee:hover {
   animation-play-state: paused;
 }
 

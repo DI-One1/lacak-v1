@@ -7,6 +7,7 @@ import {
   getItemTitle,
   getCategoryRepresentativeImage,
   formatIndonesianDate,
+  getItemLocalDateString,
   DEFAULT_ITEM_IMAGE,
 } from "@/features/item/utils/public-item-utils";
 
@@ -73,34 +74,55 @@ export default function PublicSearchPortal({
 
   const filteredItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+
     return initialItems
       .filter((item) => {
         const searchable = [
           getItemTitle(item),
-          item.jenis.name,
-          item.merek.name,
-          item.warna.name,
-          item.lokasi.name,
+          item.jenis?.name || "",
+          item.merek?.name || "",
+          item.warna?.name || "",
+          item.lokasi?.name || "",
           item.additionalDesc || "",
-        ].join(" ").toLowerCase();
-        const createdDate = item.createdAt.slice(0, 10);
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        // Match exact local YYYY-MM-DD date as displayed on the card
+        const itemLocalDate = getItemLocalDateString(item.createdAt);
+
+        const matchesFrom = !fromDate || (itemLocalDate !== "" && itemLocalDate >= fromDate);
+        const matchesTo = !toDate || (itemLocalDate !== "" && itemLocalDate <= toDate);
+
         return (
           (!query || searchable.includes(query)) &&
-          (selectedCategory === "all" || item.jenis.name === selectedCategory) &&
-          (selectedColor === "all" || item.warna.name === selectedColor) &&
-          (selectedBrand === "all" || item.merek.name === selectedBrand) &&
-          (selectedLocation === "all" || item.lokasi.name === selectedLocation) &&
-          (!fromDate || createdDate >= fromDate) &&
-          (!toDate || createdDate <= toDate)
+          (selectedCategory === "all" || item.jenis?.name === selectedCategory) &&
+          (selectedColor === "all" || item.warna?.name === selectedColor) &&
+          (selectedBrand === "all" || item.merek?.name === selectedBrand) &&
+          (selectedLocation === "all" || item.lokasi?.name === selectedLocation) &&
+          matchesFrom &&
+          matchesTo
         );
       })
       .sort((first, second) => {
         if (selectedSort === "name") return getItemTitle(first).localeCompare(getItemTitle(second));
         const firstTime = new Date(first.createdAt).getTime();
         const secondTime = new Date(second.createdAt).getTime();
-        return selectedSort === "oldest" ? firstTime - secondTime : secondTime - firstTime;
+        const validFirst = isNaN(firstTime) ? 0 : firstTime;
+        const validSecond = isNaN(secondTime) ? 0 : secondTime;
+        return selectedSort === "oldest" ? validFirst - validSecond : validSecond - validFirst;
       });
-  }, [initialItems, searchQuery, selectedSort, selectedCategory, selectedColor, selectedBrand, selectedLocation, fromDate, toDate]);
+  }, [
+    initialItems,
+    searchQuery,
+    selectedSort,
+    selectedCategory,
+    selectedColor,
+    selectedBrand,
+    selectedLocation,
+    fromDate,
+    toDate,
+  ]);
 
   const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE) || 1;
   const pageItems = filteredItems.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -159,6 +181,11 @@ export default function PublicSearchPortal({
               }}
               className="w-full px-2.5 py-1.5 rounded-lg border border-[#d2e2dd] bg-white text-xs outline-none focus:border-[#0d7565] focus:ring-1 focus:ring-[#0d7565] text-[#20433d]"
             />
+            {fromDate && toDate && fromDate > toDate && (
+              <p className="text-[10px] font-semibold text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200/80 leading-tight">
+                Tanggal &apos;Dari&apos; tidak boleh melebihi &apos;Sampai&apos;.
+              </p>
+            )}
             {(fromDate || toDate) && (
               <button
                 type="button"
@@ -167,7 +194,7 @@ export default function PublicSearchPortal({
                   setToDate("");
                   setCurrentPage(1);
                 }}
-                className="mt-1 text-center text-[10.5px] font-semibold text-[#0d7565] hover:underline"
+                className="mt-1 text-center text-[10.5px] font-semibold text-[#0d7565] hover:underline cursor-pointer"
               >
                 Hapus Rentang
               </button>

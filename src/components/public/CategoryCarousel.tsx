@@ -16,6 +16,10 @@ export default function CategoryCarousel({
   onSelectCategory,
 }: CategoryCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isMouseDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeftPos = useRef(0);
+  const isDragging = useRef(false);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -25,6 +29,32 @@ export default function CategoryCarousel({
         behavior: "smooth",
       });
     }
+  };
+
+  /* ── Mouse Drag & Touch Swipe Handlers ── */
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    isMouseDown.current = true;
+    startX.current = e.clientX - el.offsetLeft;
+    scrollLeftPos.current = el.scrollLeft;
+    isDragging.current = false;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isMouseDown.current) return;
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const x = e.clientX - el.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    if (Math.abs(walk) > 6) {
+      isDragging.current = true;
+    }
+    el.scrollLeft = scrollLeftPos.current - walk;
+  };
+
+  const handlePointerUp = () => {
+    isMouseDown.current = false;
   };
 
   return (
@@ -63,7 +93,11 @@ export default function CategoryCarousel({
         {/* Categories Viewport */}
         <div
           ref={scrollContainerRef}
-          className="categories-viewport min-w-0 flex-1 overflow-x-auto no-scrollbar scroll-smooth py-1"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          className="categories-viewport min-w-0 flex-1 overflow-x-auto no-scrollbar scroll-smooth py-1 touch-pan-x select-none cursor-grab active:cursor-grabbing"
         >
           {/* List Kategori dalam 2 Baris yang rapi dan rounded */}
           <div className="categories grid h-[210px] grid-cols-[repeat(10,minmax(104px,1fr))] grid-rows-[repeat(2,98px)] gap-2.5">
@@ -74,15 +108,22 @@ export default function CategoryCarousel({
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => onSelectCategory(isSelected ? "all" : cat.name)}
-                  className={`category-card group/item flex h-[98px] min-w-[104px] flex-col items-center justify-center gap-2 rounded-xl border p-2 text-[#1a2d2b] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer ${
+                  onClick={(e) => {
+                    if (isDragging.current) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    onSelectCategory(isSelected ? "all" : cat.name);
+                  }}
+                  className={`category-card group/item flex h-[98px] min-w-[104px] flex-col items-center justify-center gap-2 rounded-xl border p-2 text-[#1a2d2b] transition-all duration-250 ease-out hover:-translate-y-1 hover:shadow-xs cursor-pointer ${
                     isSelected
                       ? "border-[#0d7565] bg-[#eaf6f2] shadow-xs ring-2 ring-[#0d7565]/30"
                       : "border-[#e5eeeb] bg-[#fbfdfc] hover:border-[#0d7565]/50 hover:bg-white"
                   }`}
                 >
                   <span
-                    className={`grid h-[42px] w-[42px] place-items-center rounded-full transition-all duration-200 group-hover/item:scale-110 shadow-xs ${
+                    className={`grid h-[42px] w-[42px] place-items-center rounded-full transition-all duration-200 group-hover/item:scale-110 shadow-xs pointer-events-none ${
                       isSelected
                         ? "bg-[#0d7565] text-white shadow-md shadow-[#0d7565]/20"
                         : "bg-white text-[#0d7565] border border-[#e5eeeb] group-hover/item:border-[#0d7565]/30 group-hover/item:bg-[#f2faf7]"
@@ -91,7 +132,7 @@ export default function CategoryCarousel({
                     <CategoryIcon categoryName={cat.name} size={20} className={isSelected ? "text-white" : "text-[#0d7565]"} />
                   </span>
                   <b
-                    className={`max-w-[94px] truncate text-center text-[10.5px] leading-tight ${
+                    className={`max-w-[94px] truncate text-center text-[10.5px] leading-tight pointer-events-none ${
                       isSelected ? "font-bold text-[#0d594f]" : "font-medium text-[#2d4642]"
                     }`}
                   >

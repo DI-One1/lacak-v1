@@ -30,6 +30,7 @@ export default function CarouselFoundItems({ items }: Props) {
   const [dragDelta, setDragDelta] = useState(0);
   const [cWidth, setCWidth] = useState(0);
   const [iWidth, setIWidth] = useState(380);
+  const [isPaused, setIsPaused] = useState(false);
 
   /* refs */
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,6 +61,15 @@ export default function CarouselFoundItems({ items }: Props) {
   );
   const prev = useCallback(() => goTo(idx - 1), [idx, goTo]);
   const next = useCallback(() => goTo(idx + 1), [idx, goTo]);
+
+  /* ── autoplay with pause on hover ── */
+  useEffect(() => {
+    if (isPaused || dragging || detail || total <= 1) return;
+    const timer = setInterval(() => {
+      setIdx((prev) => (prev + 1) % total);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [isPaused, dragging, detail, total]);
 
   /* ── keyboard ── */
   useEffect(() => {
@@ -193,15 +203,17 @@ export default function CarouselFoundItems({ items }: Props) {
         {/* ── Carousel viewport ── */}
         <div
           ref={containerRef}
-          className="relative select-none touch-pan-y"
+          className="relative select-none touch-pan-y py-4"
           style={{ cursor: dragging ? "grabbing" : "grab" }}
           onPointerDown={onDown}
           onPointerMove={onMove}
           onPointerUp={onUp}
           onPointerCancel={onUp}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           <div
-            className="flex will-change-transform"
+            className="flex will-change-transform py-2"
             style={{
               gap: `${GAP}px`,
               transform: `translateX(${tx}px)`,
@@ -233,7 +245,7 @@ export default function CarouselFoundItems({ items }: Props) {
                       }
                       if (active) openDetail(item);
                     }}
-                    className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3dbd84] group"
+                    className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3dbd84] group rounded-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(13,59,46,0.14)] cursor-pointer"
                     tabIndex={active ? 0 : -1}
                     style={{ pointerEvents: active ? "auto" : "none" }}
                     aria-label={`Lihat detail ${getItemTitle(item)}`}
