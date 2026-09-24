@@ -44,7 +44,7 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   "Jam Tangan":
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
   Aksesoris:
-    "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=600&q=80",
+    "https://blog.atome.id/wp-content/uploads/2022/10/Rekomendasi-aksesori-perhiasan-dari-kotak-Pandora-untukmu.jpg",
   "Buku & Alat Tulis":
     "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=80",
   "Botol & Tumbler":
