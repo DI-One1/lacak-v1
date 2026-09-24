@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "LACAK - Platform Terintegrasi Lost & Found",
+  title: "LACAK - Lapak Cari barang Kembali",
   description:
     "Sistem Informasi Pengelolaan Barang Hilang & Temuan Terintegrasi",
 };
