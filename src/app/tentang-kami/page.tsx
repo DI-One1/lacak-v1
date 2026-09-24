@@ -46,7 +46,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     description:
       "Bertanggung jawab atas arsitektur sistem dan pengembangan fitur inti LACAK.",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&h=675&fit=crop&crop=face&q=85",
+      "https://static.vecteezy.com/system/resources/previews/037/336/395/non_2x/user-profile-flat-illustration-avatar-person-icon-gender-neutral-silhouette-profile-picture-free-vector.jpg",
     profile: "#",
   },
   {
@@ -55,7 +55,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     description:
       "Mengembangkan antarmuka dan sistem backend yang menjadi fondasi platform LACAK.",
     image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&h=675&fit=crop&crop=face&q=85",
+      "https://static.vecteezy.com/system/resources/previews/037/336/395/non_2x/user-profile-flat-illustration-avatar-person-icon-gender-neutral-silhouette-profile-picture-free-vector.jpg",
     profile: "#",
   },
 ];
